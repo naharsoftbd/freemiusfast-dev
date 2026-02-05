@@ -55,6 +55,15 @@ FREEMIUS_SECRET_KEY=your_secret_key
 FREEMIUS_PRODUCT_ID=your_product_id
 ```
 
+## 🔑 Licensing Architecture
+Freemiusfast utilizes a middleware-based approach to verify Freemiusfast licenses. This ensures that premium React components and Laravel routes are only accessible to authorized users.
+
+Handshake: On Istallation, the app verifies the user's license key via the license API.
+
+Caching: Subscription status is cached locally to ensure high performance and reduce API overhead.
+
+Gatekeeping: The CheckLicense middleware intercepts requests to "Pro" features.
+
 ## 🤝 Contributing
 Contributions are welcome! If you have ideas for better Freemius integration or UI improvements, please fork the repo and submit a pull request.
 
