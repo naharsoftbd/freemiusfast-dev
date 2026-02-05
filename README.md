@@ -21,5 +21,5 @@
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/naharsoftbd/freemiusfast.git](https://github.com/naharsoftbd/freemiusfast.git)
+git clone https://github.com/naharsoftbd/freemiusfast.git
 cd freemiusfast
