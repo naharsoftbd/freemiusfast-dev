@@ -25,7 +25,7 @@ git clone https://github.com/naharsoftbd/freemiusfast.git
 cd freemiusfast
 ```
 
-### 1. Install Dependencies
+### 2. Install Dependencies
 
 **Install PHP dependencies**
 ```bash
@@ -35,6 +35,24 @@ composer install
 **Install JavaScript dependencies**
 ```bash
 npm install
+```
+
+### 3. Environment Setup
+Create your environment file and generate the application key:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Freemius Configuration
+Add your Freemius developer credentials to your .env file to enable licensing features:
+
+```bash
+FREEMIUS_DEV_ID=your_developer_id
+FREEMIUS_PUBLIC_KEY=your_public_key
+FREEMIUS_SECRET_KEY=your_secret_key
+FREEMIUS_PRODUCT_ID=your_product_id
 ```
 
 ## 🤝 Contributing
