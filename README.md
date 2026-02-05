@@ -25,14 +25,14 @@ git clone https://github.com/naharsoftbd/freemiusfast.git
 cd freemiusfast
 ```
 
-### 1. Clone the Repository
+### 1. Install Dependencies
 
-# Install PHP dependencies
+**Install PHP dependencies**
 ```bash
 composer install
 ```
 
-# Install JavaScript dependencies
+**Install JavaScript dependencies**
 ```bash
 npm install
 ```
