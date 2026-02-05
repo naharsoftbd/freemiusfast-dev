@@ -10,7 +10,7 @@
 
 ## ✨ Features
 * **Freemius SDK Integration:** Pre-configured logic for license validation, trial management, and subscription syncing.
-* **Modern Tech Stack:** Laravel 11, React, and Inertia.js for a smooth Single Page Application (SPA) feel.
+* **Modern Tech Stack:** Laravel 12, React, and Inertia.js for a smooth Single Page Application (SPA) feel.
 * **Dynamic Menu System:** Database-driven sidebar management with automatic active-state detection.
 * **Advanced RBAC:** Robust Role-Based Access Control to restrict features based on license tiers (Free vs. Pro).
 * **Responsive UI:** Beautiful dashboard built with Tailwind CSS and Lucide icons.
@@ -36,3 +36,14 @@ composer install
 ```bash
 npm install
 ```
+
+## 🤝 Contributing
+Contributions are welcome! If you have ideas for better Freemius integration or UI improvements, please fork the repo and submit a pull request.
+
+## 📄 License
+This project is open-source software licensed under the GNU license.
+
+
+---
+
+**Would you like me to generate a `LICENSE` file or a `.gitignore` specifically optimized for a Laravel-Rea
