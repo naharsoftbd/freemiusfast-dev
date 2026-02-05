@@ -1,10 +1,10 @@
-# TJAdmin | Laravel & React Freemius SaaS Boilerplate
+# Freemiusfast | Laravel & React Freemius SaaS Boilerplate
 
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Freemius](https://img.shields.io/badge/Monetization-Freemius-blue?style=for-the-badge)
 
-**TJAdmin** is a professional-grade SaaS boilerplate designed specifically for developers selling web applications through the [Freemius](https://freemius.com/) ecosystem. It combines the power of a Laravel backend with a modern React SPA frontend to create a seamless licensing and management experience.
+**Freemiusfast** is a professional-grade SaaS boilerplate designed specifically for developers selling web applications through the [Freemius](https://freemius.com/) ecosystem. It combines the power of a Laravel backend with a modern React SPA frontend to create a seamless licensing and management experience.
 
 ---
 
@@ -21,5 +21,5 @@
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/your-username/tjadmin-freemius.git](https://github.com/your-username/tjadmin-freemius.git)
-cd tjadmin-freemius
+git clone [https://github.com/naharsoftbd/freemiusfast.git](https://github.com/naharsoftbd/freemiusfast.git)
+cd freemiusfast
