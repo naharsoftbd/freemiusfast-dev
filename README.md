@@ -23,3 +23,9 @@
 ```bash
 git clone https://github.com/naharsoftbd/freemiusfast.git
 cd freemiusfast
+
+# Install PHP dependencies
+composer install
+
+# Install JavaScript dependencies
+npm install
