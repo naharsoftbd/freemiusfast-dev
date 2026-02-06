@@ -24,7 +24,8 @@
         "react-dom": "^18.2.0",
         "tailwindcss": "^3.2.1",
         "typescript": "^5.0.2",
-        "vite": "^7.0.7"
+        "vite": "^7.0.7",
+        "vite-plugin-node-polyfills": "^0.25.0"
     },
     "dependencies": {
         "@freemius/checkout": "^1.4.1",
