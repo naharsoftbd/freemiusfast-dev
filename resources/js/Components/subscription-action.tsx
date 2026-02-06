@@ -64,12 +64,16 @@ export function SubscriptionAction(props: {
             .map((plan) => {
                 const filteredPricing: EnrichedPricing[] | undefined = plan.pricing
                     ?.filter((pricing) => {
-                        return true;
+                        console.log('pricing',parseCurrency(pricing.currency));
+                        return (
+                            (pricing.annual_price || pricing.monthly_price) &&
+                            parseCurrency(pricing.currency) === subscription.currency.toUpperCase()
+                        );
                     })
                     .map((pricing) => {
                         let updatePeriod: BILLING_CYCLE | null = null;
                         let updateAmount: number | null = null;
-                        console.log('pricing',pricing);
+                        
                         if (subscription.billingCycle === BILLING_CYCLE.MONTHLY) {
                             if (pricing.monthly_price) {
                                 updatePeriod = BILLING_CYCLE.MONTHLY;
@@ -120,7 +124,7 @@ export function SubscriptionAction(props: {
                 };
             });
 
-        const currentPlanIndex = availablePlans.findIndex((plan) => plan.id=subscription.planId);
+        const currentPlanIndex = availablePlans.findIndex((plan) => plan.id==subscription.planId) ?? 0;
 
         const currentPlan = availablePlans[currentPlanIndex];
 
