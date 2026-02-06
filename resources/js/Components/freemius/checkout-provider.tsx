@@ -3,10 +3,10 @@
 import * as React from 'react';
 import { Checkout, CheckoutOptions } from '@freemius/checkout';
 import { useEffect, useState, useRef, useCallback, useContext } from 'react';
-import { CheckoutContext, CheckoutPurchaseData, PurchaseSyncSuccess } from '../hooks/checkout';
+import { CheckoutContext, CheckoutPurchaseData, PurchaseSyncSuccess } from '@/hooks/checkout';
 import Processing from './processing';
-import { useLocale } from '../utils/locale';
-import { getSanitizedUrl } from '../utils/fetch';
+import { useLocale } from '@/utils/locale';
+import { getSanitizedUrl } from '@/utils/fetch';
 import type { PurchaseData, CheckoutSerialized } from '@freemius/sdk';
 
 function useCreateCheckout(

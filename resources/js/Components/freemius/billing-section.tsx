@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { PortalData } from '@freemius/sdk';
 import { SectionHeading } from './section-heading';
-import { useLocale } from '../utils/locale';
+import { useLocale } from '@/utils/locale';
 import { BillingForm } from './billing-form';
 import { BillingInfo } from './billing-info';
 import { BillingUpdatePayload } from '@freemius/sdk';
-import { usePortalAction } from '../hooks/data';
+import { usePortalAction } from '@/hooks/data';
 
 export function BillingSection(props: {
     billing: NonNullable<PortalData['billing']>;

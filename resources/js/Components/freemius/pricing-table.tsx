@@ -2,14 +2,14 @@
 
 import * as React from 'react';
 import { CURRENCY, parseCurrency, parseNumber, PortalPlans } from '@freemius/sdk';
-import { formatCurrency } from '../utils/formatter';
+import { formatCurrency } from '@/utils/formatter';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { useCheckout } from '../hooks/checkout';
-import { useLocale } from '../utils/locale';
-import CheckIcon from '../icons/check';
+import { useCheckout } from '@/hooks/checkout';
+import { useLocale } from '@/utils/locale';
+import CheckIcon from '@/icons/check';
 
 export type PricingTableData = {
     id: string;

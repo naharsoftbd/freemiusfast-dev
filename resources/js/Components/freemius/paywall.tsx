@@ -3,9 +3,9 @@
 import * as React from 'react';
 import { PricingTable } from './pricing-table';
 import { Button } from '@/components/ui/button';
-import { useLocale } from '../utils/locale';
+import { useLocale } from '@/utils/locale';
 import { TopupTable } from './topup-table';
-import { usePricingData } from '../hooks/data';
+import { usePricingData } from '@/hooks/data';
 import { PricingSkeleton } from './pricing-skeleton';
 
 export enum PaywallRestriction {

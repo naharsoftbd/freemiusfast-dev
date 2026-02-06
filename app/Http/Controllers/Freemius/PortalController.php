@@ -5,20 +5,37 @@ namespace App\Http\Controllers\Freemius;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Services\Freemius\FreemiusService;
 
 class PortalController extends Controller
 {
+    protected $freemiusService;
+
+    public function __construct(FreemiusService $freemiusService)
+    {
+        $this->freemiusService = $freemiusService;
+    }
+
     public function getPortal(Request $request)
     {
         $user = $request->user();
         $productId = config('freemius.product_id');
         $planId = config('freemius.plan_id');
         $fsUserId = 10069169;
-        $priceId = 51769;
 
         // 1. Safety check
-        if (! $fsUserId) {
-            return response()->json(null); // Triggers <CustomerPortalEmpty /> in React
+        if (!$fsUserId) {
+            return response()->json([
+            'user' => $user,
+            'subscriptions' => [
+                // React component looks for 'primary' to show the main card
+                'primary' => [],
+                'all' => [],
+            ],
+            'plans' => [],
+            'payments' => [],
+            'sellingUnit' => 'site', // or 'user'/'license'
+        ]);
         }
 
         $baseUrl = "https://api.freemius.com/v1/products/{$productId}";

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
-import Spinner from '../icons/spinner';
+import Spinner from '@/icons/spinner';
 
 export default function Processing(props: { children: ReactNode }) {
     return (

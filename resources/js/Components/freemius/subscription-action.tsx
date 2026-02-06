@@ -24,10 +24,10 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useCheckout } from '../hooks/checkout';
-import { useLocale } from '../utils/locale';
-import { formatCurrency, formatNumber } from '../utils/formatter';
-import { findClosestPricing } from '../utils/pricing-ops';
+import { useCheckout } from '@/hooks/checkout';
+import { useLocale } from '@/utils/locale';
+import { formatCurrency, formatNumber } from '@/utils/formatter';
+import { findClosestPricing } from '@/utils/pricing-ops';
 
 type EnrichedPricing = PricingEntity & {
     updateAmount: string | null;
@@ -40,7 +40,7 @@ type PlanWithPricing = Omit<PortalPlans[0], 'pricing'> & {
 };
 
 /**
- * @todo
+ * ..todo
  * 1. Implement a nice short pricing table like UI when upgrading or downgrading.
  */
 export function SubscriptionAction(props: {
@@ -236,7 +236,7 @@ function PlanUpdateSection({
                                 }
                             >
                                 {plan.title}
-                                {/* @todo - This data structure is weird here */}
+                                {/* ..todo - This data structure is weird here */}
                                 {plan.closestPricing?.updateAmount && plan.closestPricing.updatePeriod ? (
                                     <DropdownMenuShortcut>
                                         {locale.portal.action.amount(

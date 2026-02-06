@@ -3,10 +3,10 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { PurchaseData } from '@freemius/sdk';
-import { useRestorePurchase } from '../hooks/data';
-import Spinner from '../icons/spinner';
-import RefreshIcon from '../icons/refresh';
-import { useLocale } from '../utils/locale';
+import { useRestorePurchase } from '@/hooks/data';
+import Spinner from '@/icons/spinner';
+import RefreshIcon from '@/icons/refresh';
+import { useLocale } from '@/utils/locale';
 
 export type RestorePurchaseProps = {
     portalEndpoint: string;

@@ -1,5 +1,5 @@
-import { CustomerPortal } from '@/components/customer-portal';
-import { CheckoutProvider } from '@/components/checkout-provider';
+import { CustomerPortal } from '@/components/freemius/customer-portal';
+import { CheckoutProvider } from '@/components/freemius/checkout-provider';
 import { type CheckoutOptions } from '@freemius/checkout';
 import type { PurchaseData, CheckoutSerialized } from '@freemius/sdk';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';

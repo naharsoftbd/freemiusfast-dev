@@ -3,9 +3,9 @@
 import * as React from 'react';
 import { CURRENCY, parseCurrency, parseNumber, PortalPlans, SellingUnit } from '@freemius/sdk';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatCurrency, formatNumber } from '../utils/formatter';
-import { useCheckout } from '../hooks/checkout';
-import { useLocale } from '../utils/locale';
+import { formatCurrency, formatNumber } from '@/utils/formatter';
+import { useCheckout } from '@/hooks/checkout';
+import { useLocale } from '@/utils/locale';
 import { Button } from '@/components/ui/button';
 
 type TopupTableData = {

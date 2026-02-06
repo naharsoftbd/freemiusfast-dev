@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import type { PortalData } from '@freemius/sdk';
-import { useLocale } from '../utils/locale';
-import { formatCurrency, formatDate } from '../utils/formatter';
+import { useLocale } from '@/utils/locale';
+import { formatCurrency, formatDate } from '@/utils/formatter';
 import { SubscriptionAction } from './subscription-action';
 import { PaymentMethodUpdate } from './payment-method-update';
 import PaymentIcon from './payment-icon';

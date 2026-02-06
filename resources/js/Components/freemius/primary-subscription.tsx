@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { PortalData } from '@freemius/sdk';
 import { SectionHeading } from './section-heading';
-import { useLocale } from '../utils/locale';
+import { useLocale } from '@/utils/locale';
 import { CancelSubscription } from './cancel-subscription';
 import { SubscriptionInfo } from './subscription-info';
 

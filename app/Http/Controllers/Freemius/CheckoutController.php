@@ -6,8 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
+
 class CheckoutController extends Controller
 {
+    protected $freemiusService;
+
+    public function __construct(FreemiusService $freemiusService)
+    {
+        $this->freemiusService = $freemiusService;
+    }
+
     public function checkout(Request $request)
     {
         $productId = config('freemius.product_id');
@@ -66,11 +74,6 @@ class CheckoutController extends Controller
             ],
             'plans' => $plans,
         ]);
-    }
-
-    public function checkoutSuccess(Request $request)
-    {
-        dd($request->all());
     }
 
     public function downloadInvoice($paymentId)

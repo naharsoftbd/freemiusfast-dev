@@ -7,16 +7,16 @@ import {
     idToString,
     SubscriptionCancellationRequest,
 } from '@freemius/sdk';
-import { useLocale } from '../utils/locale';
-import { formatCurrency, getDaysLeft } from '../utils/formatter';
+import { useLocale } from '@/utils/locale';
+import { formatCurrency, getDaysLeft } from '@/utils/formatter';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { getRenewalCouponDiscounts } from '../utils/pricing-ops';
-import { getCancellationReasons } from '../utils/cancellation';
-import { usePortalAction } from '../hooks/data';
-import Spinner from '../icons/spinner';
+import { getRenewalCouponDiscounts } from '@/utils/pricing-ops';
+import { getCancellationReasons } from '@/utils/cancellation';
+import { usePortalAction } from '@/hooks/data';
+import Spinner from '@/icons/spinner';
 
 export function CancelSubscription(props: {
     subscription: NonNullable<PortalData['subscriptions']['primary']>;

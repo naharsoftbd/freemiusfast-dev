@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { useLocale } from '../utils/locale';
-import { usePricingData } from '../hooks/data';
+import { useLocale } from '@/utils/locale';
+import { usePricingData } from '@/hooks/data';
 import { PricingSkeleton } from './pricing-skeleton';
 import { PricingTable } from './pricing-table';
 

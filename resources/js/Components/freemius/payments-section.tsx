@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { PortalPayment, SellingUnit } from '@freemius/sdk';
-import { useLocale } from '../utils/locale';
+import { useLocale } from '@/utils/locale';
 import { SectionHeading } from './section-heading';
 import PaymentIcon from './payment-icon';
-import { formatCurrency, formatDate, formatNumber } from '../utils/formatter';
+import { formatCurrency, formatDate, formatNumber } from '@/utils/formatter';
 import { Button } from '@/components/ui/button';
-import PdfIcon from '../icons/pdf';
+import PdfIcon from '@/icons/pdf';
 import { PaymentBadge } from './payment-badge';
 import PaginatedList from './paginated-list';
 

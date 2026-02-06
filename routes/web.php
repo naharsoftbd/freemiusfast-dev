@@ -20,13 +20,6 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/pricing', function () {
-    return Inertia::render('PricingPage');
-})->middleware(['auth', 'verified'])->name('pricing');
-
-Route::get('/account', function () {
-    return Inertia::render('AccountPage');
-})->middleware(['auth', 'verified'])->name('portal.account');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,15 +27,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/checkout', [CheckoutController::class, 'checkoutSuccess'])->middleware(['auth', 'verified'])->name('order.success');
-Route::inertia('/payment/success', 'PaymentSuccess');
-Route::inertia('/payment/cancel', 'PaymentCancel');
-
-Route::middleware(['auth'])->group(function () {
-    // Calling this as /api/portal
-    Route::get('/api/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
-    Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
-    Route::get('/order/invoices/{id}', [CheckoutController::class, 'downloadInvoice'])->name('download.invoice');
-});
 
 require __DIR__.'/auth.php';
+require __DIR__.'/freemius.php';

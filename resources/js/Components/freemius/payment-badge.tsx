@@ -2,11 +2,11 @@ import * as React from 'react';
 import { PortalPayment } from '@freemius/sdk';
 import { Badge } from '@/components/ui/badge';
 import { ComponentProps, useMemo } from 'react';
-import { useLocale } from '../utils/locale';
-import SubscriptionInitialIcon from '../icons/subscription-initial';
-import SubscriptionRenewalIcon from '../icons/subscription-renewal';
-import OneOffPurchaseIcon from '../icons/oneoff-purchase';
-import RefundIcon from '../icons/refund';
+import { useLocale } from '@/utils/locale';
+import SubscriptionInitialIcon from '@/icons/subscription-initial';
+import SubscriptionRenewalIcon from '@/icons/subscription-renewal';
+import OneOffPurchaseIcon from '@/icons/oneoff-purchase';
+import RefundIcon from '@/icons/refund';
 
 export function PaymentBadge(props: { type: PortalPayment['type']; occurance: 'first' | 'renewal' | 'oneoff' }) {
     const { type, occurance } = props;

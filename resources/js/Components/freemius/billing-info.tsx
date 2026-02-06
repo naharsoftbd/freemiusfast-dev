@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { PortalData } from '@freemius/sdk';
-import { useLocale } from '../utils/locale';
+import { useLocale } from '@/utils/locale';
 import { BillingItem } from './billing-item';
 import { Button } from '@/components/ui/button';
 

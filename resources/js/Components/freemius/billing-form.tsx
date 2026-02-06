@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { PortalData } from '@freemius/sdk';
-import { useLocale } from '../utils/locale';
+import { useLocale } from '@/utils/locale';
 import { BillingRequest } from '@freemius/sdk';
-import Spinner from '../icons/spinner';
+import Spinner from '@/icons/spinner';
 import { Input } from '@/components/ui/input';
 import { BillingItem } from './billing-item';
-import { countriesOptions } from '../utils/country';
+import { countriesOptions } from '@/utils/country';
 import { Combobox } from './combobox';
 
 export function BillingForm(props: {

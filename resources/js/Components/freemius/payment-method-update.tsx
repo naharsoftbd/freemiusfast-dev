@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { PortalSubscription } from '@freemius/sdk';
-import { useCheckout } from '../hooks/checkout';
+import { useCheckout } from '@/hooks/checkout';
 import { Button } from '@/components/ui/button';
-import { useLocale } from '../utils/locale';
+import { useLocale } from '@/utils/locale';
 import PaymentIcon from './payment-icon';
 
 export function PaymentMethodUpdate(props: { subscription: PortalSubscription }) {
@@ -14,7 +14,7 @@ export function PaymentMethodUpdate(props: { subscription: PortalSubscription })
         <p className="flex flex-wrap justify-between items-center gap-4">
             <span className="grow-0 shrink-0 flex items-center text-muted-foreground text-sm ">
                 <PaymentIcon method={subscription.paymentMethod!} />
-                {/* @todo - When backend sends card info show it here */}
+                {/* ..todo - When backend sends card info show it here */}
                 <span className="font-semibold uppercase text-xs">
                     {locale.portal.payment.info(subscription.paymentMethod!)}
                 </span>
