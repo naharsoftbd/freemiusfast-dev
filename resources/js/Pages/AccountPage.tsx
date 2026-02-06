@@ -11,8 +11,8 @@ const checkoutOptions: CheckoutOptions = {
 };
 const checkout: CheckoutSerialized = {
   options: { product_id: import.meta.env.VITE_FREEMIUS_PRODUCT_ID! },
-  link: `https://checkout.freemius.com/${import.meta.env.VITE_FREEMIUS_PRODUCT_ID}/`,
-  baseUrl: import.meta.env.VITE_FREEMIUS_PUBLIC_URL
+  link: `${import.meta.env.VITE_FREEMIUS_BASE_URL}/${import.meta.env.VITE_FREEMIUS_PRODUCT_ID}/`,
+  baseUrl: `${import.meta.env.VITE_FREEMIUS_BASE_URL}/`
 
 };
 const portalEndpoint = import.meta.env.VITE_FREEMIUS_PUBLIC_URL + '/api/portal';

@@ -5,7 +5,9 @@ import { freemius } from '@/lib/freemius';
 export default function Dashboard() {
     async function main() {
   const pricing = await freemius.pricing.retrieve();
-  console.log(pricing);
+  const purchasesByEmail = await freemius.purchase.retrievePurchasesByEmail('abusalah01diu@gmail.com');
+  console.log('Purchases by Email:', purchasesByEmail);
+  //console.log(pricing);
 }
 main()
     return (

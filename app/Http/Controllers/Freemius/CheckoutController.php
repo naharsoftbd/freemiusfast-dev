@@ -20,11 +20,27 @@ class CheckoutController extends Controller
 
         $plansResponse = Http::withHeaders($headers)->get("{$baseUrl}/plans.json");
 
-        if (!$response->successful()) {
+        if (!$plansResponse->successful()) {
             return response()->json(['error' => 'Failed to fetch plans'], 500);
         }
 
         $plans = $plansResponse->json('plans');
+
+        $planFeatures = [
+            39394 => [ // Plan ID
+                ['title' => 'Unlimited Patients', 'included' => true],
+                ['title' => 'Digital Prescriptions', 'included' => true],
+                ['title' => 'Multi-Doctor Support', 'included' => true],
+                ['title' => 'Email Support', 'included' => true],
+            ],
+            39400 => [
+                ['title' => 'Unlimited Patients', 'included' => true],
+                ['title' => 'Digital Prescriptions', 'included' => true],
+                ['title' => 'Multi-Doctor Support', 'included' => false],
+                ['title' => 'Priority Support', 'included' => false],
+            ],
+        ];
+
         foreach ($plans as &$plan) {
             
                 $pricing = Http::withHeaders($headers)
@@ -37,6 +53,8 @@ class CheckoutController extends Controller
                         'currency' => $price['currency'],
                     ];
                 })->values()->all();
+
+                $plan['features'] = $planFeatures[$plan['id']] ?? [];
             
         }
         unset($plan);
@@ -48,5 +66,10 @@ class CheckoutController extends Controller
     ],
     'plans' => $plans
 ]);
+    }
+
+     public function checkoutSuccess(Request $request)
+    {
+        dd($request->all());
     }
 }

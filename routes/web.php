@@ -35,14 +35,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/success', [CheckoutController::class, 'checkoutSuccess'])->middleware(['auth', 'verified'])->name('order.success');
+Route::get('/checkout', [CheckoutController::class, 'checkoutSuccess'])->middleware(['auth', 'verified'])->name('order.success');
 Route::inertia('/payment/success', 'PaymentSuccess');
 Route::inertia('/payment/cancel', 'PaymentCancel');
 
 Route::middleware(['auth'])->group(function () {
     // Calling this as /api/portal
     Route::get('/api/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
-    Route::get('/api/portal', [PortalController::class, 'getPortal']);
+    Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
 });
 
 
