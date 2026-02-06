@@ -4,8 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Freemius\PortalController;
+use App\Http\Controllers\Freemius\CheckoutController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,7 +27,7 @@ Route::get('/pricing', function () {
 
 Route::get('/account', function () {
     return Inertia::render('AccountPage');
-})->middleware(['auth', 'verified'])->name('account');
+})->middleware(['auth', 'verified'])->name('portal.account');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -41,6 +41,7 @@ Route::inertia('/payment/cancel', 'PaymentCancel');
 
 Route::middleware(['auth'])->group(function () {
     // Calling this as /api/portal
+    Route::get('/api/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
     Route::get('/api/portal', [PortalController::class, 'getPortal']);
 });
 

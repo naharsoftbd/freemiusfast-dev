@@ -27,7 +27,6 @@ class PortalController extends Controller
         // 2. Fetch Data in Parallel (or sequence)
         $subsResponse = Http::withHeaders($headers)->get("{$baseUrl}/users/{$fsUserId}/subscriptions.json");
         $plansResponse = Http::withHeaders($headers)->get("{$baseUrl}/plans.json");
-        $plansPriceResponse = Http::withHeaders($headers)->get("{$baseUrl}/plans/{$planId}/pricing.json");
         $paymentsResponse = Http::withHeaders($headers)->get("{$baseUrl}/users/{$fsUserId}/payments.json");
         
         $plans = $plansResponse->json('plans');

@@ -15,45 +15,38 @@ class CheckoutController extends Controller
         
         // 1. Fetch plans directly via HTTP
         // Note: Using the .json extension and with_pricing=true is required
-        $response = Http::withHeaders([
-            // Use the "API Bearer Authorization Token" from Freemius Dashboard Settings
-            'Authorization' => 'Bearer ' . config('freemius.bearer_token'),
-        ])->get("https://api.freemius.com/v1/products/{$productId}/plans/" .config('freemius.plan_id').".json", [
-            'with_pricing' => 'true'
-        ]);
+        $baseUrl = "https://api.freemius.com/v1/products/{$productId}";
+        $headers = ['Authorization' => 'Bearer ' . config('freemius.bearer_token')];
+
+        $plansResponse = Http::withHeaders($headers)->get("{$baseUrl}/plans.json");
 
         if (!$response->successful()) {
             return response()->json(['error' => 'Failed to fetch plans'], 500);
         }
 
-        $data = $response->json();
+        $plans = $plansResponse->json('plans');
+        foreach ($plans as &$plan) {
+            
+                $pricing = Http::withHeaders($headers)
+                    ->get("{$baseUrl}/plans/{$plan['id']}/pricing.json")
+                    ->json('pricing');
+
+                $plan['pricing'] = collect($pricing)->map(function ($price) {
+                    return [
+                        ...$price,
+                        'currency' => $price['currency'],
+                    ];
+                })->values()->all();
+            
+        }
+        unset($plan);
 
         return response()->json([
     'options' => [
         'product_id' => (int) env('VITE_FREEMIUS_PRODUCT_ID'),
         'public_key' => env('VITE_FREEMIUS_PUBLIC_KEY'),
     ],
-    'plans' => [
-        [
-            'id' => '12345', // Plan ID
-            'title' => 'Pro Plan',
-            'description' => 'Best for individuals',
-            'is_featured' => true,
-            'pricing' => [
-                [
-                    'id' => '67890', // Pricing ID
-                    'currency' => 'usd',
-                    'is_hidden' => false,
-                    'monthly_price' => 19.99, // Required for the React filter
-                    'annual_price' => 199.99,  // Required for the React filter
-                ]
-            ],
-            'features' => [
-                ['title' => 'Feature 1', 'value' => 'Included'],
-                ['title' => 'Feature 2'],
-            ]
-        ]
-    ]
+    'plans' => $plans
 ]);
     }
 }

@@ -11,8 +11,8 @@ Route::get('/user', function (Request $request) {
 
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
-    //Route::get('/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
-});
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
+//     //Route::get('/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
+// });
 
