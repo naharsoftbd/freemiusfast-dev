@@ -17,21 +17,22 @@ class PortalController extends Controller
         $priceId = 51769;
 
         // 1. Safety check
-        if (!$fsUserId) {
+        if (! $fsUserId) {
             return response()->json(null); // Triggers <CustomerPortalEmpty /> in React
         }
 
         $baseUrl = "https://api.freemius.com/v1/products/{$productId}";
-        $headers = ['Authorization' => 'Bearer ' . config('freemius.bearer_token')];
+        $headers = ['Authorization' => 'Bearer '.config('freemius.bearer_token')];
+        
 
         // 2. Fetch Data in Parallel (or sequence)
         $userResponse = Http::withHeaders($headers)->get("{$baseUrl}/users/{$fsUserId}.json");
         $subsResponse = Http::withHeaders($headers)->get("{$baseUrl}/users/{$fsUserId}/subscriptions.json");
         $plansResponse = Http::withHeaders($headers)->get("{$baseUrl}/plans.json");
         $paymentsResponse = Http::withHeaders($headers)->get("{$baseUrl}/users/{$fsUserId}/payments.json");
-        
+
         $plans = $plansResponse->json('plans');
-         $planFeatures = [
+        $planFeatures = [
             39394 => [ // Plan ID
                 ['title' => 'Unlimited Patients', 'included' => true],
                 ['title' => 'Digital Prescriptions', 'included' => true],
@@ -46,28 +47,27 @@ class PortalController extends Controller
             ],
         ];
         foreach ($plans as &$plan) {
-            
-                $pricing = Http::withHeaders($headers)
-                    ->get("{$baseUrl}/plans/{$plan['id']}/pricing.json")
-                    ->json('pricing');
 
-                $plan['pricing'] = collect($pricing)->map(function ($price) {
-                    return [
-                        ...$price,
-                        'currency' => $price['currency'],
-                    ];
-                })->values()->all();
+            $pricing = Http::withHeaders($headers)
+                ->get("{$baseUrl}/plans/{$plan['id']}/pricing.json")
+                ->json('pricing');
 
-                $plan['features'] = $planFeatures[$plan['id']] ?? [];
-            
+            $plan['pricing'] = collect($pricing)->map(function ($price) {
+                return [
+                    ...$price,
+                    'currency' => $price['currency'],
+                ];
+            })->values()->all();
+
+            $plan['features'] = $planFeatures[$plan['id']] ?? [];
+
         }
         unset($plan);
 
-
         $planMap = collect($plans)->keyBy('id');
         $payments = collect($paymentsResponse->json('payments'))->map(function ($payment) use ($planMap) {
-           $plan = $planMap->get((int) $payment['plan_id']);
-
+            $plan = $planMap->get((int) $payment['plan_id']);
+            $publicUrl = config('freemius.public_url');
             return [
                 // keep original fields if needed
                 ...$payment,
@@ -81,22 +81,19 @@ class PortalController extends Controller
                     default => 'unknown',
                 },
 
-                'invoiceUrl' => "https://users.freemius.com/invoices/{$payment['id']}",
+                'invoiceUrl' => "{$publicUrl}/order/invoices/{$payment['id']}",
 
                 'quota' => $plan['quota'] ?? null,
                 'planTitle' => $plan['title'] ?? 'Unknown Plan',
             ];
         })->values();
 
-
-
-
         // 3. Construct the "PortalData" object
         return response()->json([
             'user' => $userResponse->json(),
             'subscriptions' => [
                 // React component looks for 'primary' to show the main card
-                'primary' => $subsResponse->json('subscriptions.0'), 
+                'primary' => $subsResponse->json('subscriptions.0'),
                 'all' => $subsResponse->json('subscriptions'),
             ],
             'plans' => $plans,

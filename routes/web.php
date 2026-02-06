@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\Freemius\CheckoutController;
+use App\Http\Controllers\Freemius\PortalController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\Freemius\PortalController;
-use App\Http\Controllers\Freemius\CheckoutController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -15,7 +15,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -43,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
     // Calling this as /api/portal
     Route::get('/api/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
     Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
+    Route::get('/order/invoices/{id}', [CheckoutController::class, 'downloadInvoice'])->name('download.invoice');
 });
-
 
 require __DIR__.'/auth.php';
