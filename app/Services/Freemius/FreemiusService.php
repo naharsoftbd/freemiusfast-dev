@@ -162,25 +162,20 @@ class FreemiusService
             ->map(fn ($sub) => $this->mapPortalSubscription($sub, $plans))
             ->values();
 
-        $billing = $this->getUserBilling();
+        $rawBilling = $this->getUserBilling();
 
-        $billing = response()->json([
-            'billing' => [
-                'business_name'   => $billing['business_name'] ?? null,
-                'phone'           => $billing['phone'] ?? null,
-                'tax_id'          => $billing['tax_id'] ?? null,
-                'address_street'  => $billing['address_street'] ?? null,
-                'address_apt'     => $billing['address_apt'] ?? null,
-                'address_city'    => $billing['address_city'] ?? null,
-                'address_state'   => $billing['address_state'] ?? null,
-                'address_zip'     => $billing['address_zip'] ?? null,
-                'address_country' => $billing['address_country'] ?? null,
-            ],
-            'user' => [
-                'id' => $this->fsUserId, // Freemius user id
-            ],
-        ]);
-        
+        $billing = [
+            'business_name'        => $rawBilling['business_name'] ?? null,
+            'phone'                => $rawBilling['phone'] ?? null,
+            'tax_id'               => $rawBilling['tax_id'] ?? null,
+            'address_street'       => $rawBilling['address_street'] ?? null,
+            'address_apt'          => $rawBilling['address_apt'] ?? null,
+            'address_city'         => $rawBilling['address_city'] ?? null,
+            'address_state'        => $rawBilling['address_state'] ?? null,
+            'address_zip'          => $rawBilling['address_zip'] ?? null,
+            'address_country'      => $rawBilling['address_country'] ?? null,
+            'address_country_code' => $rawBilling['address_country_code'] ?? null,
+        ];       
 
         // 3. Construct the "PortalData" object
         return response()->json([
