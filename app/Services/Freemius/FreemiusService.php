@@ -148,6 +148,17 @@ class FreemiusService
         $plans = $this->getPlanData();
 
         $payments = $this->getPaymentData($plans);
+
+        $rawSubscriptions = collect($subsResponse->json('subscriptions'));
+        $primaryRaw = $rawSubscriptions->first();
+
+        $primary = $primaryRaw
+            ? $this->mapPortalSubscription($primaryRaw, $plans)
+            : null;
+
+        $past = $rawSubscriptions
+            ->map(fn ($sub) => $this->mapPortalSubscription($sub, $plans))
+            ->values();
         
 
         // 3. Construct the "PortalData" object
@@ -155,8 +166,9 @@ class FreemiusService
             'user' => $userResponse->json(),
             'subscriptions' => [
                 // React component looks for 'primary' to show the main card
-                'primary' => $subsResponse->json('subscriptions.0'),
-                'all' => $subsResponse->json('subscriptions'),
+                'primary' => $primary,
+                'active' => $primary,
+                'past' => $past,
             ],
             'plans' => $plans,
             'payments' => $payments,
@@ -195,5 +207,77 @@ class FreemiusService
         return $payments;
 
     }
+
+    protected function mapPortalSubscription(array $sub, array $plans): array
+    {
+        $plan = collect($plans)->firstWhere('id', (int) $sub['plan_id']);
+
+        return [
+            'subscriptionId' => (string) $sub['id'],
+            'licenseId'      => (string) $sub['license_id'],
+            'planId'         => (string) $sub['plan_id'],
+            'pricingId'      => (string) $sub['pricing_id'],
+
+            'planTitle'      => $plan['title'] ?? 'Unknown Plan',
+
+            'renewalAmount'  => (float) $sub['renewal_amount'],
+            'initialAmount'  => (float) $sub['initial_amount'],
+
+            'billingCycle'   => $this->mapBillingCycle($sub['billing_cycle'] ?? null),
+
+            'isActive'       => $sub['canceled_at'] === null,
+
+            'renewalDate'    => $sub['next_payment']
+                ? \Carbon\Carbon::parse($sub['next_payment'])->toISOString()
+                : null,
+
+            'currency'       => strtoupper($sub['currency']),
+
+            'cancelledAt'    => $sub['canceled_at']
+                ? \Carbon\Carbon::parse($sub['canceled_at'])->toISOString()
+                : null,
+
+            'createdAt'      => \Carbon\Carbon::parse($sub['created'])->toISOString(),
+
+            'checkoutUpgradeAuthorization' => null,
+
+            'quota' => $plan['quota'] ?? null,
+
+            'paymentMethod' => $sub['gateway']
+                ? [
+                    'type' => match ($sub['gateway']) {
+                        'stripe' => 'card',
+                        'paypal' => 'paypal',
+                        default  => 'unknown',
+                    }
+                ]
+                : null,
+
+            'upgradeUrl' => url("/subscriptions/{$sub['id']}/upgrade"),
+
+            'isTrial' => $sub['trial_ends'] !== null,
+
+            'trialEnds' => $sub['trial_ends']
+                ? \Carbon\Carbon::parse($sub['trial_ends'])->toISOString()
+                : null,
+
+            'isFreeTrial' => $sub['trial_ends'] !== null,
+
+            'applyRenewalCancellationCouponUrl' => null,
+
+            'cancelRenewalUrl' => url("/subscriptions/{$sub['id']}/cancel"),
+        ];
+    }
+
+    protected function mapBillingCycle(?int $cycle): string
+    {
+        return match ($cycle) {
+            1   => 'monthly',
+            12  => 'yearly',
+            0   => 'oneoff',
+            default => 'N/A',
+        };
+    }
+
 
 }
