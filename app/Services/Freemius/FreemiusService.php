@@ -51,6 +51,8 @@ class FreemiusService
         // Remove signature from data to hash the content only
         unset($data['signature']);
 
+        ksort($data);
+
         // Freemius typically expects the signature to be an HMAC-SHA256 
         // hash of the JSON-encoded data using your secret key.
         $expectedSignature = hash_hmac('sha256', json_encode($data), $this->secretKey);
@@ -159,6 +161,25 @@ class FreemiusService
         $past = $rawSubscriptions
             ->map(fn ($sub) => $this->mapPortalSubscription($sub, $plans))
             ->values();
+
+        $billing = $this->getUserBilling();
+
+        $billing = response()->json([
+            'billing' => [
+                'business_name'   => $billing['business_name'] ?? null,
+                'phone'           => $billing['phone'] ?? null,
+                'tax_id'          => $billing['tax_id'] ?? null,
+                'address_street'  => $billing['address_street'] ?? null,
+                'address_apt'     => $billing['address_apt'] ?? null,
+                'address_city'    => $billing['address_city'] ?? null,
+                'address_state'   => $billing['address_state'] ?? null,
+                'address_zip'     => $billing['address_zip'] ?? null,
+                'address_country' => $billing['address_country'] ?? null,
+            ],
+            'user' => [
+                'id' => $this->fsUserId, // Freemius user id
+            ],
+        ]);
         
 
         // 3. Construct the "PortalData" object
@@ -172,6 +193,7 @@ class FreemiusService
             ],
             'plans' => $plans,
             'payments' => $payments,
+            'billing' => $billing,
             'sellingUnit' => 'site', // or 'user'/'license'
         ]);
     }
@@ -277,6 +299,17 @@ class FreemiusService
             0   => 'oneoff',
             default => 'N/A',
         };
+    }
+
+    protected function getUserBilling(): array
+    {
+        $response = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->fsUserId}/billing.json");
+
+        if (!$response->successful()) {
+            throw new \Exception('Unable to fetch billing info from Freemius');
+        }
+
+        return $response->json();
     }
 
 

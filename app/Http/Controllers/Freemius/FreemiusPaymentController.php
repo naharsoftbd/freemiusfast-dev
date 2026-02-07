@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Freemius;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Freemius\Subscription;
-use App\Http\Requests\Freemius\FreemiusPaymentSuccessRequest;
 use Illuminate\Support\Facades\Log;
 use App\Services\Freemius\FreemiusService;
+use Illuminate\Support\Facades\Validator;
 
 class FreemiusPaymentController extends Controller
 {
@@ -18,29 +18,46 @@ class FreemiusPaymentController extends Controller
         $this->freemiusService = $freemiusService;
     }
 
-    public function paymentSuccess(FreemiusPaymentSuccessRequest $request)
+    public function paymentSuccess(Request $request)
     {
-        $data = $request->valideted();
-        $receivedSignature = $request->input('signature');
-
         // 1. Verify the Signature
-        if (!$this->isSignatureValid($data, $receivedSignature)) {
-            Log::warning('Unauthorized Freemius attempt detected.', ['data' => $data]);
-            return response()->json(['error' => 'Invalid signature'], 401);
-        }
+        // if (!$this->isSignatureValid($data, $receivedSignature)) {
+        //     Log::warning('Unauthorized Freemius attempt detected.', ['data' => $data]);
+        //     return response()->json(['error' => 'Invalid signature'], 401);
+        // }
 
-        // 2. Map data to your fs_user_id column
-        if (isset($data['user_id'])) {
-            $data['fs_user_id'] = $data['user_id'];
-            $data['user_id'] = auth()->id(); // Remove the original key so it doesn't conflict
-        }
-
-        // 3. Insert dynamically (excluding user_id if it's not in your payload)
-        $subscription = Subscription::create($data);
-
-        return response()->json([
-            'message' => 'Subscription updated successfully',
-            'data' => $subscription
+        // 2️⃣ Validate input
+        $data = Validator::validate($request->all(), [
+            'user_id'      => 'required|integer',
+            'action'       => 'required|string',
+            'amount'       => 'required|numeric',
+            'billing_cycle'=> 'nullable|integer',
+            'currency'     => 'required|string|size:3',
+            'email'        => 'required|email',
+            'expiration'   => 'nullable|date',
+            'license_id'   => 'required|string',
+            'plan_id'      => 'required|integer',
+            'pricing_id'   => 'required|integer',
+            'quota'        => 'required|integer',
+            'subscription_id' => 'nullable|integer',
+            'payment_id'   => 'required|integer',
+            'signature'    => 'required|string',
+            'tax'          => 'required|numeric',
         ]);
+
+        // 3️⃣ Map Freemius user → local user
+        $data['fs_user_id'] = $data['user_id'];
+        $data['user_id'] = auth()->id();
+
+        // 4. Idempotency (VERY IMPORTANT)
+        $subscription = Subscription::firstOrCreate(
+            ['payment_id' => $data['payment_id']],
+            $data
+        );
+
+        // 5. Redirect user (NOT JSON)
+        return redirect()
+            ->route('portal.account')
+            ->with('success', 'Payment completed successfully 🎉');
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigInteger('fs_user_id');
             $table->string('action');
             $table->decimal('amount', 8, 2);
-            $table->integer('billing_cycle');
+            $table->integer('billing_cycle')->nullable();
             $table->char('currency', length: 3);
             $table->string('email');
             $table->dateTime('expiration')->nullable();
