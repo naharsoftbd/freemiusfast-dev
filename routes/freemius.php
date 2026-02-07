@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 Route::get('/pricing', function () {
     return Inertia::render('Freemius/PricingPage');
-})->middleware(['auth', 'verified'])->name('pricing');
+})->middleware(['auth', 'verified'])->name('freemius.pricing');
 
 Route::get('/account', function () {
     return Inertia::render('Freemius/AccountPage');
@@ -22,6 +22,6 @@ Route::get('/payment/success', [FreemiusPaymentController::class, 'paymentSucces
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
     Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
-    Route::get('/order/invoices/{id}', [CheckoutController::class, 'downloadInvoice'])->name('download.invoice');
+    Route::get('/order/invoices/{id}', [PortalController::class, 'downloadInvoice'])->name('download.invoice');
 });
 
