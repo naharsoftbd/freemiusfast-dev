@@ -228,6 +228,7 @@ export const defaultLocale = {
         from: () => <>from</>,
         billingSeparator: () => <>/</>,
         monthly: () => <>month</>,
+        annual: () => <>annual</>,
         paidTrial: () => <>Trial</>,
         freeTrial: () => <>Free Trial</>,
         action: {

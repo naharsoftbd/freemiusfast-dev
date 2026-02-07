@@ -22,6 +22,8 @@ export type PricingTableData = {
         value?: string;
     }[];
     featured: boolean;
+    monthly_price: number | null;
+    annual_price: number | null;
 };
 
 export function PricingTableItem(props: {
@@ -47,13 +49,13 @@ export function PricingTableItem(props: {
 
                 {plan.description ? <CardDescription className="text-sm">{plan.description}</CardDescription> : null}
             </CardHeader>
-
+            {console.log(plan)}
             <CardContent className="flex-1">
                 <div className="flex flex-col items-center">
                     <div className="flex items-baseline gap-2 mb-2 justify-center">
                         <div className="text-3xl font-bold">{plan.price}</div>
                         <div className="text-sm text-muted-foreground">{locale.pricing.billingSeparator()}</div>
-                        <div className="text-sm text-muted-foreground">{locale.pricing.monthly()}</div>
+                        <div className="text-sm text-muted-foreground">{plan.monthly_price ? locale.pricing.monthly():locale.pricing.annual()}</div>
                     </div>
                 </div>
 
@@ -128,10 +130,17 @@ export function PricingTable(props: {
 
             const { annual_price, monthly_price } = pricing;
 
-            const minPrice = Math.min(
-                (parseNumber(annual_price) ?? Infinity) / 12,
-                parseNumber(monthly_price) ?? Infinity
-            );
+            let minPrice;
+
+            if (monthly_price) {
+                minPrice = Math.min(
+                    (parseNumber(annual_price) ?? Infinity) / 12,
+                    parseNumber(monthly_price) ?? Infinity
+                );
+            } else {
+               minPrice =  parseNumber(annual_price) ?? Infinity;
+            }
+
 
             const features: PricingTableData['features'] = [];
 
@@ -140,7 +149,6 @@ export function PricingTable(props: {
                     features.push({ title: feature.title, value: feature.value });
                 }
             });
-
             data.push({
                 id: plan.id!,
                 pricing_id: pricing.id!,
@@ -149,6 +157,8 @@ export function PricingTable(props: {
                 featured: plan.is_featured ?? false,
                 price: formatCurrency(minPrice, currency),
                 features: features,
+                monthly_price: parseNumber(monthly_price),
+                annual_price: parseNumber(annual_price)
             });
         });
 
