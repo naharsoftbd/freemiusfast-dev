@@ -60,6 +60,7 @@ class FreemiusService
         return hash_equals($expectedSignature, $receivedSignature);
     }
 
+    // Download Freemius Invoice
     public function downloadInvoice($paymentId)
     {
 
@@ -70,11 +71,13 @@ class FreemiusService
         return $response;
     }
 
+    // Ccheckout API Indpoint data
     public function checkout()
     {      
         return $this->getPlanData();
     }
 
+    // Get All Plan Data
     public function getPlanData()
     {
         $plansResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/plans.json");
@@ -124,8 +127,9 @@ class FreemiusService
 
     }
 
+    // Customer Portal API Indpoint Data
      public function getPortalData()
-    {
+      {
         $user = Auth::user();
         // 1. Safety check
         if (!$this->fsUserId) {
@@ -162,20 +166,7 @@ class FreemiusService
             ->map(fn ($sub) => $this->mapPortalSubscription($sub, $plans))
             ->values();
 
-        $rawBilling = $this->getUserBilling();
-
-        $billing = [
-            'business_name'        => $rawBilling['business_name'] ?? null,
-            'phone'                => $rawBilling['phone'] ?? null,
-            'tax_id'               => $rawBilling['tax_id'] ?? null,
-            'address_street'       => $rawBilling['address_street'] ?? null,
-            'address_apt'          => $rawBilling['address_apt'] ?? null,
-            'address_city'         => $rawBilling['address_city'] ?? null,
-            'address_state'        => $rawBilling['address_state'] ?? null,
-            'address_zip'          => $rawBilling['address_zip'] ?? null,
-            'address_country'      => $rawBilling['address_country'] ?? null,
-            'address_country_code' => $rawBilling['address_country_code'] ?? null,
-        ];       
+        $billing = $this->getUserBilling();   
 
         // 3. Construct the "PortalData" object
         return response()->json([
@@ -193,6 +184,7 @@ class FreemiusService
         ]);
     }
 
+    // Get payment data by plan
     public function getPaymentData($plans)
     {
         $paymentsResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->fsUserId}/payments.json");
@@ -225,6 +217,7 @@ class FreemiusService
 
     }
 
+    // Customer Portal Subscription data by Plan
     protected function mapPortalSubscription(array $sub, array $plans): array
     {
         $plan = collect($plans)->firstWhere('id', (int) $sub['plan_id']);
@@ -286,6 +279,7 @@ class FreemiusService
         ];
     }
 
+    // Customer Portal Subscription data billingCycle Format
     protected function mapBillingCycle(?int $cycle): string
     {
         return match ($cycle) {
@@ -296,6 +290,7 @@ class FreemiusService
         };
     }
 
+    // Customer Portal billing information 
     protected function getUserBilling(): array
     {
         $response = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->fsUserId}/billing.json");
