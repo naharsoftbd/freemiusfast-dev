@@ -149,6 +149,7 @@ export function PricingTable(props: {
                     features.push({ title: feature.title, value: feature.value });
                 }
             });
+            console.log(pricing.id);
             data.push({
                 id: plan.id!,
                 pricing_id: pricing.id!,

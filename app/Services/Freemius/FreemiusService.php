@@ -4,6 +4,7 @@ namespace App\Services\Freemius;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class FreemiusService
 {
@@ -23,6 +24,8 @@ class FreemiusService
 
     protected  $baseUrl;
 
+    protected  $fsUserId;
+
     /**
      * Create a new class instance.
      */
@@ -35,6 +38,8 @@ class FreemiusService
         $this->apiBaseUrl = config('freemius.api_base_url');
         $this->publicKey = config('freemius.public_key');
         $this->baseUrl = "{$this->apiBaseUrl}/{$this->productId}";
+        $this->fsUserId = User::find(auth()->id())->subscription->fs_user_id;
+        
     }
 
     /**
@@ -120,10 +125,8 @@ class FreemiusService
      public function getPortalData()
     {
         $user = Auth::user();
-        $fsUserId = 10069169;
-
         // 1. Safety check
-        if (!$fsUserId) {
+        if (!$this->fsUserId) {
             return response()->json([
             'user' => $user,
             'subscriptions' => [
@@ -139,8 +142,8 @@ class FreemiusService
         
 
         // 2. Fetch Data in Parallel (or sequence)
-        $userResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$fsUserId}.json");
-        $subsResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$fsUserId}/subscriptions.json");
+        $userResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->fsUserId}.json");
+        $subsResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->fsUserId}/subscriptions.json");
 
         $plans = $this->getPlanData();
 
@@ -163,9 +166,7 @@ class FreemiusService
 
     public function getPaymentData($plans)
     {
-        $fsUserId = 10069169;
-
-        $paymentsResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$fsUserId}/payments.json");
+        $paymentsResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->fsUserId}/payments.json");
 
         $planMap = collect($plans)->keyBy('id');
         $payments = collect($paymentsResponse->json('payments'))->map(function ($payment) use ($planMap) {

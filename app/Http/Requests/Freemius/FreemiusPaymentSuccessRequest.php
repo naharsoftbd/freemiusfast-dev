@@ -22,7 +22,7 @@ class FreemiusPaymentSuccessRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fs_user_id'      => 'required|integer',
+            'user_id'      => 'required|integer',
             'action'          => 'required|string',
             'amount'          => 'required|numeric',
             'billing_cycle'   => 'required|integer',
