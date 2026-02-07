@@ -6,6 +6,7 @@ import { BillingForm } from './billing-form';
 import { BillingInfo } from './billing-info';
 import { BillingUpdatePayload } from '@freemius/sdk';
 import { usePortalAction } from '@/hooks/data';
+import { fetchBilling, updateBilling } from '@/services/billingService';
 
 export function BillingSection(props: {
     billing: NonNullable<PortalData['billing']>;
@@ -16,6 +17,10 @@ export function BillingSection(props: {
     const [billing, setBilling] = React.useState<NonNullable<PortalData['billing']>>({
         ...props.billing,
     });
+
+    const { user } = props;
+
+    console.log(billing);
 
     const { execute } = usePortalAction<BillingUpdatePayload, PortalData['billing']>(props.billing.updateUrl);
 
