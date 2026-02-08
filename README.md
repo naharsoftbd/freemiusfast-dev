@@ -1,8 +1,10 @@
 # Freemiusfast | Laravel & React Freemius SaaS Boilerplate
 
+<p align="center">
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Freemius](https://img.shields.io/badge/Monetization-Freemius-blue?style=for-the-badge)
+</p>
 
 **Freemiusfast** is a professional-grade SaaS boilerplate designed specifically for developers selling web applications through the [Freemius](https://freemius.com/) ecosystem. It combines the power of a Laravel backend with a modern React SPA frontend to create a seamless licensing and management experience.
 
@@ -49,10 +51,14 @@ php artisan key:generate
 Add your Freemius developer credentials to your .env file to enable licensing features:
 
 ```bash
-FREEMIUS_DEV_ID=your_developer_id
-FREEMIUS_PUBLIC_KEY=your_public_key
-FREEMIUS_SECRET_KEY=your_secret_key
-FREEMIUS_PRODUCT_ID=your_product_id
+VITE_FREEMIUS_PRODUCT_ID="----"
+VITE_FREEMIUS_API_KEY="---"
+VITE_FREEMIUS_SECRET_KEY="---"
+VITE_FREEMIUS_PUBLIC_KEY="---"
+VITE_FREEMIUS_PUBLIC_URL='http://127.0.0.1:8000'
+VITE_FREEMIUS_BASE_URL='---'
+VITE_FREEMIUS_PLAN_ID="---"
+VITE_FREEMIUS_API_BASE_URL='---'
 ```
 
 ## 🔑 Licensing Architecture
