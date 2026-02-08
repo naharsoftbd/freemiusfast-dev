@@ -22,6 +22,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
     Route::get('/order/invoices/{id}', [PortalController::class, 'downloadInvoice'])->name('download.invoice');
 
-    Route::get('/payment/success', [FreemiusPaymentController::class, 'paymentSuccess'])->name('payment.success');
+    Route::get('/checkout', [FreemiusPaymentController::class, 'paymentSuccess'])->name('payment.success');
 });
 

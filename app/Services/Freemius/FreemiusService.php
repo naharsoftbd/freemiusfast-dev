@@ -49,17 +49,11 @@ class FreemiusService
     /**
      * Verify that the request came from Freemius.
      */
-    public function isSignatureValid(array $data, $receivedSignature): bool
+    public function isSignatureValid($clean_url, $receivedSignature): bool
     {
-        
-        // Remove signature from data to hash the content only
-        unset($data['signature']);
-
-        ksort($data);
-
         // Freemius typically expects the signature to be an HMAC-SHA256 
         // hash of the JSON-encoded data using your secret key.
-        $expectedSignature = hash_hmac('sha256', json_encode($data), $this->secretKey);
+        $expectedSignature = hash_hmac('sha256', $clean_url, $this->secretKey);
 
         return hash_equals($expectedSignature, $receivedSignature);
     }
@@ -280,6 +274,7 @@ class FreemiusService
             'applyRenewalCancellationCouponUrl' => null,
 
             'cancelRenewalUrl' => url("/subscriptions/{$sub['id']}/cancel"),
+            'sandboxParam' => $this->getSandBoxParam(),
         ];
     }
 
@@ -342,6 +337,28 @@ class FreemiusService
         }
 
         return null;
+    }
+
+    // Get Sandbox Param
+    public function getSandBoxParam()
+    {
+        $product_id = $this->productId;
+        $product_public_key = $this->publicKey;
+        $product_secret_key = $this->secretKey;
+
+        $ctx = time(); // Or any random unique string
+        $sandbox_token = md5(
+        $ctx .
+        $product_id .
+        $product_secret_key .
+        $product_public_key .
+        'checkout'
+        );
+
+       return  $sandbox_params = array(
+        'token'  => $sandbox_token,
+        'ctx'    => $ctx,
+        );
     }
 
 }

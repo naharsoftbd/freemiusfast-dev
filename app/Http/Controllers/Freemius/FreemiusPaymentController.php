@@ -20,11 +20,21 @@ class FreemiusPaymentController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        // 1. Verify the Signature
-        // if (!$this->isSignatureValid($data, $receivedSignature)) {
-        //     Log::warning('Unauthorized Freemius attempt detected.', ['data' => $data]);
-        //     return response()->json(['error' => 'Invalid signature'], 401);
-        // }
+        //1. Verify the Signature
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+        $current_url = $protocol . "://" . $host . $_SERVER['REQUEST_URI'];
+
+        // Remove the "&signature=..." part using string slicing
+        $signature_pos = strpos($current_url, '&signature=');
+        $clean_url = substr($current_url, 0, $signature_pos);
+
+        $receivedSignature = $request->input('signature');
+
+        if (!$this->freemiusService->isSignatureValid($clean_url, $receivedSignature)) {
+            Log::warning('Unauthorized Freemius attempt detected.', ['$clean_url' => $clean_url]);
+            return response()->json(['error' => 'Invalid signature'], 401);
+        }
 
         // 2️⃣ Validate input
         $data = Validator::validate($request->all(), [
