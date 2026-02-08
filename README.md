@@ -1,10 +1,11 @@
 # Freemiusfast | Laravel & React Freemius SaaS Boilerplate
 
 <p align="center">
-![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Freemius](https://img.shields.io/badge/Monetization-Freemius-blue?style=for-the-badge)
+  <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/Monetization-Freemius-blue?style=for-the-badge" />
 </p>
+
 
 **Freemiusfast** is a professional-grade SaaS boilerplate designed specifically for developers selling web applications through the [Freemius](https://freemius.com/) ecosystem. It combines the power of a Laravel backend with a modern React SPA frontend to create a seamless licensing and management experience.
 
