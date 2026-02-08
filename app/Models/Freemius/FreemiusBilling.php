@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FreemiusBilling extends Model
 {
     protected $fillable = [
+        'user_id',
         'fs_user_id',
         'business_name',
         'first',

@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             // Freemius user reference
-            $table->unsignedBigInteger('fs_user_id')->unique();
+            $table->unsignedBigInteger('fs_user_id')->unique()->nullable();
 
             // Identity
             $table->string('business_name')->nullable();

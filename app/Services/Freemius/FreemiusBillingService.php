@@ -15,4 +15,9 @@ class FreemiusBillingService
     {
         $this->freemiusRepo = $freemiusRepo;
     }
+
+    public function updateByFsUserId(array $data, $fs_user_id)
+    {
+        return $this->freemiusRepo->updateByFsUserId($data, $fs_user_id);
+    }
 }

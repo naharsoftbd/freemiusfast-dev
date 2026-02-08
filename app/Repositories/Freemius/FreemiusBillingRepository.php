@@ -5,31 +5,29 @@ namespace App\Repositories\Freemius;
 use App\Models\Freemius\FreemiusBilling;
 use App\Interfaces\Freemius\FreemiusBillingRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class FreemiusBillingRepository implements FreemiusBillingRepositoryInterface
 {
-    public function all(): Collection
+    public function updateByFsUserId(array $data, $fs_user_id)
     {
-        return FreemiusBilling::all();
-    }
+        $user = Auth::user();
+        $billing = FreemiusBilling::where('fs_user_id', $fs_user_id)->first();
 
-    public function find(int $id): ?FreemiusBilling
-    {
-        return FreemiusBilling::find($id);
-    }
 
-    public function create(array $data): FreemiusBilling
-    {
-        return FreemiusBilling::create($data);
-    }
+        $data['user_id'] = auth()->id();
+        $data['email'] = $user->email;
+        $data['fs_user_id'] = $fs_user_id;
 
-    public function update(int $id, array $data): bool
-    {
-        return FreemiusBilling::where('id', $id)->update($data);
-    }
+       $lookup = ['fs_user_id' => $data['fs_user_id']];
 
-    public function delete(int $id): bool
-    {
-        return FreemiusBilling::destroy($id);
+        try {
+            $billing = FreemiusBilling::updateOrCreate($lookup, $data);
+            return response()->json($billing);
+        } catch (\Exception $e) {
+            Log::error('Billing Update Failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Duplicate entry detected'], 422);
+        }
+
     }
 }

@@ -9,7 +9,8 @@ export default function Dashboard() {
   console.log('Purchases by Email:', purchasesByEmail);
   //console.log(pricing);
 }
-main()
+main();
+console.log("Token in LocalStorage:", localStorage.getItem('api_token'));
     return (
         <AuthenticatedLayout
             header={

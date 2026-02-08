@@ -7,6 +7,8 @@ import { BillingInfo } from './billing-info';
 import { BillingUpdatePayload } from '@freemius/sdk';
 import { usePortalAction } from '@/hooks/data';
 import { fetchBilling, updateBilling } from '@/services/billingService';
+import Spinner from '@/icons/spinner';
+
 
 export function BillingSection(props: {
     billing: NonNullable<PortalData['billing']>;
@@ -17,24 +19,42 @@ export function BillingSection(props: {
     const [billing, setBilling] = React.useState<NonNullable<PortalData['billing']>>({
         ...props.billing,
     });
-
+    const [loading, setLoading] = React.useState(true);
     const { user } = props;
+    const fs_user_id = user.id;
 
-    console.log(billing);
+    React.useEffect(() => {
+        async function loadBilling() {
+            try {
+                setLoading(true);
+                const data = await fetchBilling(fs_user_id);
+                setBilling(data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadBilling();
+    }, [fs_user_id]);
 
-    const { execute } = usePortalAction<BillingUpdatePayload, PortalData['billing']>(props.billing.updateUrl);
+    
 
-    const updateBilling = async (billing: BillingUpdatePayload) => {
-        const updatedBilling = await execute(billing);
-        setBilling(updatedBilling);
+    const handleUpdateBilling = async (payload: any) => {
+        const updated = await updateBilling(fs_user_id, payload);
+        setBilling(updated);
+        setIsUpdating(false);
     };
+
+    if (loading) return <Spinner />;
+    if (!billing) return <p>No billing info found.</p>;
 
     return (
         <div className="fs-saas-starter-billing-section">
             <SectionHeading>{locale.portal.billing.title()}</SectionHeading>
 
             {isUpdating ? (
-                <BillingForm billing={billing} setIsUpdating={setIsUpdating} updateBilling={updateBilling} />
+                <BillingForm billing={billing} setIsUpdating={setIsUpdating} updateBilling={handleUpdateBilling} />
             ) : (
                 <BillingInfo billing={billing} user={props.user} setIsUpdating={setIsUpdating} />
             )}

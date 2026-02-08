@@ -5,6 +5,7 @@ namespace App\Services\Freemius;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Services\Freemius\FreemiusBillingService;
 
 class FreemiusService
 {
@@ -26,10 +27,12 @@ class FreemiusService
 
     protected  $fsUserId;
 
+    protected $freemiusBillingService;
+
     /**
      * Create a new class instance.
      */
-    public function __construct(FreemiusBillingRepositoryInterface $freemiusRepo)
+    public function __construct(FreemiusBillingService $freemiusBillingService)
     {
         $this->accessToken = config('freemius.bearer_token');
         $this->secretKey = config('freemius.secret_key');
@@ -39,7 +42,7 @@ class FreemiusService
         $this->publicKey = config('freemius.public_key');
         $this->baseUrl = "{$this->apiBaseUrl}/{$this->productId}";
         $this->fsUserId = User::find(auth()->id())->subscription->fs_user_id;
-        $this->freemiusRepo = $freemiusRepo;
+        $this->freemiusBillingService = $freemiusBillingService;
         
     }
 
@@ -304,8 +307,9 @@ class FreemiusService
 
         $billing = [
             'business_name'        => $rawBilling['business_name'] ?? null,
+            'email'                => $rawBilling['email'] ?? null,
             'first'                => $rawBilling['first'] ?? 'Abu',
-            'last'                => $rawBilling['last'] ?? 'Salah',
+            'last'                 => $rawBilling['last'] ?? 'Salah',
             'phone'                => $rawBilling['phone'] ?? null,
             'tax_id'               => $rawBilling['tax_id'] ?? null,
             'address_street'       => $rawBilling['address_street'] ?? null,
@@ -315,9 +319,18 @@ class FreemiusService
             'address_zip'          => $rawBilling['address_zip'] ?? null,
             'address_country'      => $rawBilling['address_country'] ?? null,
             'address_country_code' => $rawBilling['address_country_code'] ?? null,
+            'authToken'            => $this->getToken()
         ];
 
+       // $billing = $this->freemiusBillingService->updateByFsUserId($billing, $this->fsUserId);
+
         return $billing;
+    }
+
+    public function getToken()
+    {
+        $user = User::where('email', Auth::user()->email)->first();
+        return $user->tokens()->first()->pluck('token');
     }
 
 

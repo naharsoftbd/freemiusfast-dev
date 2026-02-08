@@ -4,6 +4,8 @@ import { type CheckoutOptions } from '@freemius/checkout';
 import type { PurchaseData, CheckoutSerialized } from '@freemius/sdk';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
 
 const checkoutEndpoint = import.meta.env.VITE_FREEMIUS_PUBLIC_URL + '/api/checkout';
 const checkoutOptions: CheckoutOptions = {
@@ -18,6 +20,16 @@ const checkout: CheckoutSerialized = {
 const portalEndpoint = import.meta.env.VITE_FREEMIUS_PUBLIC_URL + '/api/portal';
 
 export default function AccountPage() {
+
+  const { auth } = usePage().props;
+
+  if (auth.api_token) {
+        localStorage.setItem('api_token', auth.api_token);
+    }
+    
+    console.log("Token from Props:", auth.api_token);
+    console.log("Token in Storage:", localStorage.getItem('api_token'));
+
   return (
     <AuthenticatedLayout
       header={
