@@ -29,7 +29,7 @@ class FreemiusService
     /**
      * Create a new class instance.
      */
-    public function __construct()
+    public function __construct(FreemiusBillingRepositoryInterface $freemiusRepo)
     {
         $this->accessToken = config('freemius.bearer_token');
         $this->secretKey = config('freemius.secret_key');
@@ -39,6 +39,7 @@ class FreemiusService
         $this->publicKey = config('freemius.public_key');
         $this->baseUrl = "{$this->apiBaseUrl}/{$this->productId}";
         $this->fsUserId = User::find(auth()->id())->subscription->fs_user_id;
+        $this->freemiusRepo = $freemiusRepo;
         
     }
 
@@ -166,21 +167,7 @@ class FreemiusService
             ->map(fn ($sub) => $this->mapPortalSubscription($sub, $plans))
             ->values();
 
-        $rawBilling = $this->getUserBilling();
-
-        $billing = [
-            'business_name'        => $rawBilling['business_name'] ?? null,
-            'first'                => $rawBilling['first'] ?? null,
-            'phone'                => $rawBilling['phone'] ?? null,
-            'tax_id'               => $rawBilling['tax_id'] ?? null,
-            'address_street'       => $rawBilling['address_street'] ?? null,
-            'address_apt'          => $rawBilling['address_apt'] ?? null,
-            'address_city'         => $rawBilling['address_city'] ?? null,
-            'address_state'        => $rawBilling['address_state'] ?? null,
-            'address_zip'          => $rawBilling['address_zip'] ?? null,
-            'address_country'      => $rawBilling['address_country'] ?? null,
-            'address_country_code' => $rawBilling['address_country_code'] ?? null,
-        ];       
+        $billing = $this->getUserBilling();
 
         // 3. Construct the "PortalData" object
         return response()->json([
@@ -313,7 +300,24 @@ class FreemiusService
             throw new \Exception('Unable to fetch billing info from Freemius');
         }
 
-        return $response->json();
+        $rawBilling = $response->json();
+
+        $billing = [
+            'business_name'        => $rawBilling['business_name'] ?? null,
+            'first'                => $rawBilling['first'] ?? 'Abu',
+            'last'                => $rawBilling['last'] ?? 'Salah',
+            'phone'                => $rawBilling['phone'] ?? null,
+            'tax_id'               => $rawBilling['tax_id'] ?? null,
+            'address_street'       => $rawBilling['address_street'] ?? null,
+            'address_apt'          => $rawBilling['address_apt'] ?? null,
+            'address_city'         => $rawBilling['address_city'] ?? null,
+            'address_state'        => $rawBilling['address_state'] ?? null,
+            'address_zip'          => $rawBilling['address_zip'] ?? null,
+            'address_country'      => $rawBilling['address_country'] ?? null,
+            'address_country_code' => $rawBilling['address_country_code'] ?? null,
+        ];
+
+        return $billing;
     }
 
 

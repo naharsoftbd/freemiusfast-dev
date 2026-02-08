@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Services\Freemius\FreemiusService;
 
+
 class PortalController extends Controller
 {
     protected $freemiusService;
@@ -34,4 +35,6 @@ class PortalController extends Controller
             'Content-Disposition' => 'inline; filename="invoice-'.$paymentId.'.pdf"',
         ]);
     }
+
+
 }

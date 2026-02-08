@@ -5,9 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Freemius\FreemiusBilling;
 use Illuminate\Http\Request;
+use App\Services\Freemius\FreemiusBillingService;
+
 
 class FreemiusBillingController extends Controller
 {
+    protected $freemiusBillingService;
+
+     public function __construct(FreemiusBillingService $freemiusBillingService)
+    {
+        $this->freemiusBillingService = $freemiusBillingService;
+    }
     /**
      * Display a listing of the resource.
      */
