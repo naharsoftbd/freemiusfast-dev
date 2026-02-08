@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Services\Freemius\FreemiusBillingService;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 
 class FreemiusBillingController extends Controller
@@ -30,9 +31,7 @@ class FreemiusBillingController extends Controller
 
     public function updateByFsUserId(Request $request, $fs_user_id)
     {
-        Log::info('This is a test log');
-        
-        if ((string)$fs_user_id !== (string)(auth()->user()->subscription->fs_user_id ?? null)) {
+       if ((string)$fs_user_id !== (string)(auth()->user()->subscription->fs_user_id ?? null)) {
             abort(403, 'Unauthorized: You do not own this billing record.');
         }
 
@@ -57,6 +56,19 @@ class FreemiusBillingController extends Controller
         ]);
 
         $billing = $this->freemiusBillingService->updateByFsUserId($data, $fs_user_id);
+
+        // 4. Update Freemius API
+        // Replace {product_id} with your actual Freemius Product ID
+        $productId = config('freemius.product_id'); 
+        $headers = ['Authorization' => 'Bearer '.config('freemius.bearer_token')];
+
+        $response = Http::withHeaders($headers)
+            ->put("https://api.freemius.com/v1/products/{$productId}/users/{$fs_user_id}/billing.json", $data);
+
+        if ($response->failed()) {
+            // Handle API failure (optional: log it or throw error)
+            logger()->error('Freemius Sync Failed', $response->json());
+        }
 
         return $billing;
     }

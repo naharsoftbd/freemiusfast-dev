@@ -23,22 +23,30 @@ export function BillingSection(props: {
     const { user } = props;
     const fs_user_id = user.id;
 
+    console.log('billing', props.billing.updateUrl);
+
     React.useEffect(() => {
         async function loadBilling() {
+            if (!fs_user_id) return; // Guard clause for missing ID
+
             try {
                 setLoading(true);
                 const data = await fetchBilling(fs_user_id);
-                setBilling(data);
+
+                // Only set if data exists and isn't empty
+                if (data && Object.keys(data).length > 0) {
+                    setBilling(data);
+                } else {
+                    console.warn("No billing data found for this user.");
+                }
             } catch (err) {
-                console.error(err);
+                console.error("Failed to fetch billing:", err);
             } finally {
                 setLoading(false);
             }
         }
         loadBilling();
     }, [fs_user_id]);
-
-    
 
     const handleUpdateBilling = async (payload: any) => {
         const updated = await updateBilling(fs_user_id, payload);

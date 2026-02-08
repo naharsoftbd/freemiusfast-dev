@@ -319,19 +319,11 @@ class FreemiusService
             'address_zip'          => $rawBilling['address_zip'] ?? null,
             'address_country'      => $rawBilling['address_country'] ?? null,
             'address_country_code' => $rawBilling['address_country_code'] ?? null,
-            'authToken'            => $this->getToken()
         ];
 
        // $billing = $this->freemiusBillingService->updateByFsUserId($billing, $this->fsUserId);
 
         return $billing;
     }
-
-    public function getToken()
-    {
-        $user = User::where('email', Auth::user()->email)->first();
-        return $user->tokens()->first()->pluck('token');
-    }
-
 
 }

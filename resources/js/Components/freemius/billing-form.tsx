@@ -33,7 +33,7 @@ export function BillingForm(props: {
     const [formData, setFormData] = React.useState({
         business_name: billing.business_name ?? '',
         tax_id: billing.tax_id ?? '',
-        phone: billing.phone ?? '',
+        phone: String(billing.phone) ?? '',
         address_apt: billing.address_apt ?? '',
         address_street: billing.address_street ?? '',
         address_city: billing.address_city ?? '',
