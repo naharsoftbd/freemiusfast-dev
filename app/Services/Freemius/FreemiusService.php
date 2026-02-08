@@ -253,7 +253,7 @@ class FreemiusService
 
             'createdAt'      => \Carbon\Carbon::parse($sub['created'])->toISOString(),
 
-            'checkoutUpgradeAuthorization' => null,
+            'checkoutUpgradeAuthorization' => $this->getUpgradeAuth($sub['license_id'], $sub['plan_id']),
 
             'quota' => $plan['quota'] ?? null,
 
@@ -324,6 +324,24 @@ class FreemiusService
        // $billing = $this->freemiusBillingService->updateByFsUserId($billing, $this->fsUserId);
 
         return $billing;
+    }
+
+    public function getUpgradeAuth($licenseId, $planId)
+    {
+        // Freemius API usually requires HMAC or Bearer Token
+        $response = Http::withHeaders($this->headers)
+            ->post("{$this->baseUrl}/licenses/{$licenseId}/checkout/link.json", [
+                'plan_id' => $planId,
+                // 'billing_cycle' => 'annual', (optional)
+            ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            // The token is often part of the generated URL or returned in the 'authorization' field
+            return $data['settings']['authorization'] ?? null;
+        }
+
+        return null;
     }
 
 }

@@ -17,8 +17,6 @@ Route::get('/account', function () {
 })->middleware(['auth', 'verified'])->name('portal.account');
 
 
-
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
     Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
