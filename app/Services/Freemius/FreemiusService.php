@@ -355,10 +355,10 @@ class FreemiusService
         'checkout'
         );
 
-       return  $sandbox_params = array(
-        'token'  => $sandbox_token,
-        'ctx'    => $ctx,
-        );
+      return response()->json([
+            'token' => $sandbox_token,
+            'ctx'   => $ctx,
+        ]);
     }
 
 }

@@ -28,6 +28,9 @@ import { useCheckout } from '@/hooks/checkout';
 import { useLocale } from '@/utils/locale';
 import { formatCurrency, formatNumber } from '@/utils/formatter';
 import { findClosestPricing } from '@/utils/pricing-ops';
+import { freemius } from '@/lib/freemius';
+
+const sandboxParams = await freemius.checkout.getSandboxParams();
 
 type EnrichedPricing = PricingEntity & {
     updateAmount: string | null;
@@ -232,7 +235,7 @@ function PlanUpdateSection({
                                         authorization: subscription.checkoutUpgradeAuthorization,
                                         plan_id: plan.id!,
                                         pricing_id: plan.closestPricing?.id,
-                                        sandbox: subscription.sandboxParam,
+                                        sandbox: sandboxParams,
                                     })
                                 }
                             >
