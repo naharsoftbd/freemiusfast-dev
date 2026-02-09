@@ -236,6 +236,7 @@ export const defaultLocale = {
             trial: () => <>Start Trial</>,
             cancel: () => <>Maybe later</>,
             purchase: () => <>Purchase</>,
+            buynow: () => <>Buy Now</>,
         },
         topupUnitPrice: (unitPrice: string, sellingUnit: SellingUnit) => (
             <>

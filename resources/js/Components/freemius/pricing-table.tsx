@@ -49,7 +49,6 @@ export function PricingTableItem(props: {
 
                 {plan.description ? <CardDescription className="text-sm">{plan.description}</CardDescription> : null}
             </CardHeader>
-            {console.log(plan)}
             <CardContent className="flex-1">
                 <div className="flex flex-col items-center">
                     <div className="flex items-baseline gap-2 mb-2 justify-center">
@@ -96,7 +95,7 @@ export function PricingTableItem(props: {
                         });
                     }}
                 >
-                    {trial ? locale.pricing.action.trial() : locale.pricing.action.upgrade()}
+                    {trial ? locale.pricing.action.trial() : locale.pricing.action.buynow()}
                 </Button>
             </CardFooter>
         </Card>
@@ -171,7 +170,7 @@ export function PricingTable(props: {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {tableData.map((plan) => (
                 <PricingTableItem key={plan.id} plan={plan} trial={trial} onCheckout={onCheckout} />
             ))}

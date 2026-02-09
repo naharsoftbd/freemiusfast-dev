@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 Route::get('/pricing', function () {
     return Inertia::render('Freemius/PricingPage');
-})->middleware(['auth', 'verified'])->name('freemius.pricing');
+})->name('freemius.pricing');
 
 Route::get('/account', function () {
     return Inertia::render('Freemius/AccountPage');

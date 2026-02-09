@@ -28,9 +28,9 @@ import { useCheckout } from '@/hooks/checkout';
 import { useLocale } from '@/utils/locale';
 import { formatCurrency, formatNumber } from '@/utils/formatter';
 import { findClosestPricing } from '@/utils/pricing-ops';
-import { freemius } from '@/lib/freemius';
+// import { freemius } from '@/lib/freemius';
 
-const sandboxParams = await freemius.checkout.getSandboxParams();
+// const sandboxParams = await freemius.checkout.getSandboxParams();
 
 type EnrichedPricing = PricingEntity & {
     updateAmount: string | null;
@@ -223,7 +223,7 @@ function PlanUpdateSection({
                     if (!plan.pricing?.length) {
                         return null;
                     }
-                    console.log('subscription.plan', plan);
+                    console.log('subscription.plan', subscription.sandboxParam);
                     if (plan.pricing.length === 1) {
                         return (
                             <DropdownMenuItem
@@ -235,7 +235,7 @@ function PlanUpdateSection({
                                         authorization: subscription.checkoutUpgradeAuthorization,
                                         plan_id: plan.id!,
                                         pricing_id: plan.closestPricing?.id,
-                                        //sandbox: sandboxParams,
+                                        sandbox: subscription.sandboxParam,
                                     })
                                 }
                             >
@@ -285,7 +285,7 @@ function PlanUpdateSection({
                                                         authorization: subscription.checkoutUpgradeAuthorization,
                                                         plan_id: plan.id!,
                                                         pricing_id: pricing.id,
-                                                        sandbox: sandboxParams,
+                                                        sandbox: subscription.sandboxParam,
                                                     })
                                                 }
                                             >

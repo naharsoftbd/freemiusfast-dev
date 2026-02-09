@@ -17,7 +17,7 @@ export function Subscribe(props: SubscribeProps) {
     const { onCheckout, children } = props;
 
     return (
-        <div className="mb-4 max-w-4xl mx-auto">
+        <div className="mb-4 container mx-auto">
             {children}
             {isLoading || !data ? (
                 <PricingSkeleton />

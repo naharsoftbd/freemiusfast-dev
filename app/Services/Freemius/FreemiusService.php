@@ -355,10 +355,10 @@ class FreemiusService
         'checkout'
         );
 
-      return response()->json([
+      return [
             'token' => $sandbox_token,
             'ctx'   => $ctx,
-        ]);
+        ];
     }
 
 }
