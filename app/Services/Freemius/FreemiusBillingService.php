@@ -6,8 +6,8 @@ use App\Interfaces\Freemius\FreemiusBillingRepositoryInterface;
 
 class FreemiusBillingService
 {
-
     protected $freemiusRepo;
+
     /**
      * Create a new class instance.
      */

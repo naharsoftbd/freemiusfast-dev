@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -33,10 +32,10 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        /// Generate the token
-        $token = $request->user()->createToken("API TOKEN")->plainTextToken;
+        // / Generate the token
+        $token = $request->user()->createToken('API TOKEN')->plainTextToken;
 
-        return redirect()->intended(route('portal.account', absolute: false))->with('api_token', $token);;
+        return redirect()->intended(route('portal.account', absolute: false))->with('api_token', $token);
     }
 
     /**
@@ -45,13 +44,12 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         auth()->user()->tokens()->delete();
-        
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-        
 
         return redirect('/');
     }

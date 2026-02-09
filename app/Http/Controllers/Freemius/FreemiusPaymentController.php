@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Freemius;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Freemius\Subscription;
-use Illuminate\Support\Facades\Log;
 use App\Services\Freemius\FreemiusService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class FreemiusPaymentController extends Controller
@@ -20,10 +20,10 @@ class FreemiusPaymentController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        //1. Verify the Signature
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+        // 1. Verify the Signature
+        $protocol = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'];
-        $current_url = $protocol . "://" . $host . $_SERVER['REQUEST_URI'];
+        $current_url = $protocol.'://'.$host.$_SERVER['REQUEST_URI'];
 
         // Remove the "&signature=..." part using string slicing
         $signature_pos = strpos($current_url, '&signature=');
@@ -31,28 +31,29 @@ class FreemiusPaymentController extends Controller
 
         $receivedSignature = $request->input('signature');
 
-        if (!$this->freemiusService->isSignatureValid($clean_url, $receivedSignature)) {
+        if (! $this->freemiusService->isSignatureValid($clean_url, $receivedSignature)) {
             Log::warning('Unauthorized Freemius attempt detected.', ['$clean_url' => $clean_url]);
+
             return response()->json(['error' => 'Invalid signature'], 401);
         }
 
         // 2️⃣ Validate input
         $data = Validator::validate($request->all(), [
-            'user_id'      => 'required|integer',
-            'action'       => 'required|string',
-            'amount'       => 'required|numeric',
-            'billing_cycle'=> 'nullable|integer',
-            'currency'     => 'required|string|size:3',
-            'email'        => 'required|email',
-            'expiration'   => 'nullable|date',
-            'license_id'   => 'required|string',
-            'plan_id'      => 'required|integer',
-            'pricing_id'   => 'required|integer',
-            'quota'        => 'required|integer',
+            'user_id' => 'required|integer',
+            'action' => 'required|string',
+            'amount' => 'required|numeric',
+            'billing_cycle' => 'nullable|integer',
+            'currency' => 'required|string|size:3',
+            'email' => 'required|email',
+            'expiration' => 'nullable|date',
+            'license_id' => 'required|string',
+            'plan_id' => 'required|integer',
+            'pricing_id' => 'required|integer',
+            'quota' => 'required|integer',
             'subscription_id' => 'nullable|integer',
-            'payment_id'   => 'required|integer',
-            'signature'    => 'required|string',
-            'tax'          => 'required|numeric',
+            'payment_id' => 'required|integer',
+            'signature' => 'required|string',
+            'tax' => 'required|numeric',
         ]);
 
         // 3️⃣ Map Freemius user → local user

@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use App\Services\Freemius\SubscriptionService;
 use App\Services\ApiResponseService;
+use App\Services\Freemius\SubscriptionService;
+use Illuminate\Http\Request;
 
 class FreemiusSubscriptionController extends Controller
 {
-    protected  $freemiusSubscriptionService;
+    protected $freemiusSubscriptionService;
 
-    protected  $apiResponseService;
+    protected $apiResponseService;
 
     public function __construct(SubscriptionService $freemiusSubscriptionService, ApiResponseService $apiResponseService)
     {
@@ -29,10 +28,10 @@ class FreemiusSubscriptionController extends Controller
         ]);
 
         $response = $this->freemiusSubscriptionService->cancelSubscription(
-                        subscriptionId: $subscriptionId,
-                        reason: $validated['reason'] ?? 'User requested cancellation',
-                        reasonIds: $validated['reason_ids'] ?? []
-                    );
+            subscriptionId: $subscriptionId,
+            reason: $validated['reason'] ?? 'User requested cancellation',
+            reasonIds: $validated['reason_ids'] ?? []
+        );
 
         return ApiResponseService::success($response, 'Subscription cancelled successfully');
     }

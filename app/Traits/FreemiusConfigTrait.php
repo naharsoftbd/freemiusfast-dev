@@ -2,16 +2,20 @@
 
 namespace App\Traits;
 
-use App\Models\User;
-
 trait FreemiusConfigTrait
 {
     protected string $accessToken;
+
     protected string $secretKey;
+
     protected string $productId;
+
     protected array $headers;
+
     protected string $apiBaseUrl;
+
     protected string $publicKey;
+
     protected string $baseUrl;
 
     protected function initFreemius(): void
@@ -28,6 +32,7 @@ trait FreemiusConfigTrait
     protected function getFsUserId(): ?string
     {
         $user = auth()->user();
+
         return $user?->subscription?->fs_user_id ?? null;
-    }   
+    }
 }

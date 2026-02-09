@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Freemius;
 
 use App\Http\Controllers\Controller;
+use App\Services\Freemius\FreemiusService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Services\Freemius\FreemiusService;
-
 
 class CheckoutController extends Controller
 {

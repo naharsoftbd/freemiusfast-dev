@@ -4,22 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Freemius\FreemiusBilling;
-use Illuminate\Http\Request;
 use App\Services\Freemius\FreemiusBillingService;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class FreemiusBillingController extends Controller
 {
     protected $freemiusBillingService;
 
-     public function __construct(FreemiusBillingService $freemiusBillingService)
+    public function __construct(FreemiusBillingService $freemiusBillingService)
     {
         $this->freemiusBillingService = $freemiusBillingService;
     }
-    
+
     // In FreemiusBillingController.php
 
     public function showByFsUserId($fs_user_id)
@@ -31,12 +30,12 @@ class FreemiusBillingController extends Controller
 
     public function updateByFsUserId(Request $request, $fs_user_id)
     {
-       if ((string)$fs_user_id !== (string)(auth()->user()->subscription->fs_user_id ?? null)) {
+        if ((string) $fs_user_id !== (string) (auth()->user()->subscription->fs_user_id ?? null)) {
             abort(403, 'Unauthorized: You do not own this billing record.');
         }
 
         $data = $request->validate([
-            'fs_user_id' => ['nullable','integer', Rule::unique('freemius_billings')->ignore($fs_user_id)],
+            'fs_user_id' => ['nullable', 'integer', Rule::unique('freemius_billings')->ignore($fs_user_id)],
             'business_name' => 'nullable|string',
             'first' => 'nullable|string',
             'last' => 'nullable|string',
@@ -59,7 +58,7 @@ class FreemiusBillingController extends Controller
 
         // 4. Update Freemius API
         // Replace {product_id} with your actual Freemius Product ID
-        $productId = config('freemius.product_id'); 
+        $productId = config('freemius.product_id');
         $headers = ['Authorization' => 'Bearer '.config('freemius.bearer_token')];
 
         $response = Http::withHeaders($headers)
@@ -73,7 +72,7 @@ class FreemiusBillingController extends Controller
         return $billing;
     }
 
-      /**
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
@@ -83,6 +82,4 @@ class FreemiusBillingController extends Controller
 
         return response()->json(['message' => 'Deleted successfully']);
     }
-
-
 }

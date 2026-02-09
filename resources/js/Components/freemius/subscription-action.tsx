@@ -149,6 +149,7 @@ export function SubscriptionAction(props: {
                         license_id: subscription.licenseId,
                         authorization: subscription.checkoutUpgradeAuthorization,
                         plan_id: subscription.planId,
+                        sandbox: subscription.sandboxParam,
                     })
                 }
             >

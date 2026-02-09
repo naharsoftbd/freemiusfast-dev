@@ -2,8 +2,8 @@
 
 namespace App\Services\Freemius;
 
-use Illuminate\Support\Facades\Http;
 use App\Traits\FreemiusConfigTrait;
+use Illuminate\Support\Facades\Http;
 
 class SubscriptionService
 {
@@ -17,7 +17,7 @@ class SubscriptionService
         $this->initFreemius(); // initialize shared Freemius config
     }
 
-    //Subscription Cancel
+    // Subscription Cancel
     public function cancelSubscription(int|string $subscriptionId, ?string $reason = null, array $reasonIds = [])
     {
         $response = Http::withHeaders($this->headers)
