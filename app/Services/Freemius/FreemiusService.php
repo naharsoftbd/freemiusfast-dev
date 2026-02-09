@@ -118,7 +118,10 @@ class FreemiusService
 
             $plan['features'] = $planFeatures[$plan['id']] ?? [];
 
+            $plan['sandboxParam'] = $this->getSandBoxParam() ?? [];
+
         }
+        
         unset($plan);
 
         return $plans;
@@ -274,7 +277,6 @@ class FreemiusService
             'applyRenewalCancellationCouponUrl' => null,
 
             'cancelRenewalUrl' => url("/subscriptions/{$sub['id']}/cancel"),
-            'sandboxParam' => $this->getSandBoxParam(),
         ];
     }
 

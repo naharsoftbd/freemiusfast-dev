@@ -24,6 +24,7 @@ export type PricingTableData = {
     featured: boolean;
     monthly_price: number | null;
     annual_price: number | null;
+    sandboxParam: [];
 };
 
 export function PricingTableItem(props: {
@@ -34,7 +35,7 @@ export function PricingTableItem(props: {
     const { plan, trial = false, onCheckout } = props;
     const checkout = useCheckout();
     const locale = useLocale();
-
+    console.log(plan);
     return (
         <Card className="relative flex flex-col h-full gap-2">
             <CardHeader className="text-center">
@@ -92,6 +93,7 @@ export function PricingTableItem(props: {
                             plan_id: plan.id,
                             pricing_id: plan.pricing_id,
                             trial: trial,
+                            sandbox: plan.sandboxParam,
                         });
                     }}
                 >
@@ -158,7 +160,8 @@ export function PricingTable(props: {
                 price: formatCurrency(minPrice, currency),
                 features: features,
                 monthly_price: parseNumber(monthly_price),
-                annual_price: parseNumber(annual_price)
+                annual_price: parseNumber(annual_price),
+                sandboxParam: plan.sandboxParam
             });
         });
 
