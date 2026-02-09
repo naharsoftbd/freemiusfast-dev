@@ -17,6 +17,7 @@ import { getRenewalCouponDiscounts } from '@/utils/pricing-ops';
 import { getCancellationReasons } from '@/utils/cancellation';
 import { usePortalAction } from '@/hooks/data';
 import Spinner from '@/icons/spinner';
+import { cancelSubscription } from '@/services/subscriptionService';
 
 export function CancelSubscription(props: {
     subscription: NonNullable<PortalData['subscriptions']['primary']>;
@@ -208,10 +209,39 @@ function AskReasonAndCancel(props: {
     const locale = useLocale();
     const [reasons, setReasons] = React.useState<NonNullable<SubscriptionCancellationRequest['reason_ids']>>([]);
     const [feedback, setFeedback] = React.useState<string>('');
-    const { execute, loading } = usePortalAction<SubscriptionCancellationRequest>(subscription.cancelRenewalUrl);
+    const [loading, setLoading] = React.useState(false);
 
     const hasTrial = subscription.isTrial;
     const reasonOptions = React.useMemo(() => getCancellationReasons(hasTrial), [hasTrial]);
+
+    const handleCancelSubscription = async (subscription_id: number | string) => {
+        try {
+            setLoading(true);
+
+            await cancelSubscription(subscription_id, {
+                reason: feedback || 'User cancelled subscription',
+                reason_ids: reasons.length ? reasons : undefined,
+            });
+
+            if (typeof window !== 'undefined') {
+                window.alert(
+                    locale.portal.cancelSubscription.alert.subscriptionCancelled()
+                );
+            }
+
+            afterCancel?.();
+        } catch (error: any) {
+            console.error(error);
+
+            const message =
+                error?.response?.data?.message ??
+                'Failed to cancel subscription. Please try again.';
+
+            window.alert(message);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <>
@@ -272,15 +302,7 @@ function AskReasonAndCancel(props: {
                 <Button
                     variant="destructive"
                     disabled={loading}
-                    onClick={() => {
-                        execute({ feedback, reason_ids: reasons.length ? reasons : undefined }).then(() => {
-                            if (typeof window !== 'undefined') {
-                                window.alert(locale.portal.cancelSubscription.alert.subscriptionCancelled());
-                            }
-
-                            afterCancel?.();
-                        });
-                    }}
+                    onClick={() => handleCancelSubscription(subscription.subscriptionId!)}
                 >
                     {loading ? <Spinner className="size-4" /> : null}
                     {locale.portal.cancelSubscription.action.confirmCancel(hasTrial)}

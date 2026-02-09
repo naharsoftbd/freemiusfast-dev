@@ -4,8 +4,6 @@ import { SectionHeading } from './section-heading';
 import { useLocale } from '@/utils/locale';
 import { BillingForm } from './billing-form';
 import { BillingInfo } from './billing-info';
-import { BillingUpdatePayload } from '@freemius/sdk';
-import { usePortalAction } from '@/hooks/data';
 import { fetchBilling, updateBilling } from '@/services/billingService';
 import Spinner from '@/icons/spinner';
 

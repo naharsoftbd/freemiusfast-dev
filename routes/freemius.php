@@ -3,7 +3,6 @@
 use App\Http\Controllers\Freemius\CheckoutController;
 use App\Http\Controllers\Freemius\PortalController;
 use App\Http\Controllers\Freemius\FreemiusPaymentController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
