@@ -9,7 +9,7 @@ const checkoutData: CheckoutSerialized = {
     public_key: import.meta.env.VITE_FREEMIUS_PUBLIC_KEY, // Often required by the SDK
   },
   link: `https://checkout.freemius.com/${import.meta.env.VITE_FREEMIUS_PRODUCT_ID}/`,
-  baseUrl: import.meta.env.VITE_FREEMIUS_PUBLIC_URL
+  baseUrl: import.meta.env.VITE_FREEMIUS_BASE_URL
 };
 
 console.log(checkoutData);

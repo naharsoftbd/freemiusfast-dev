@@ -206,7 +206,7 @@ class FreemiusService
 
                 'invoiceUrl' => "{$publicUrl}/order/invoices/{$payment['id']}",
 
-                'quota' => $plan['quota'] ?? null,
+                'quota' => $plan['licenses'] ?? null,
                 'planTitle' => $plan['title'] ?? 'Unknown Plan',
             ];
         })->values();
@@ -249,7 +249,7 @@ class FreemiusService
 
             'checkoutUpgradeAuthorization' => $this->getUpgradeAuth($sub['license_id'], $sub['plan_id']),
 
-            'quota' => $plan['quota'] ?? null,
+            'quota' => $plan['licenses'] ?? null,
 
             'paymentMethod' => $sub['gateway']
                 ? [

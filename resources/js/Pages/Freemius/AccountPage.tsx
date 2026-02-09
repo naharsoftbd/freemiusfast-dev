@@ -11,10 +11,13 @@ const checkoutEndpoint = import.meta.env.VITE_FREEMIUS_PUBLIC_URL + '/api/checko
 const checkoutOptions: CheckoutOptions = {
   product_id: import.meta.env.VITE_FREEMIUS_PRODUCT_ID!,
 };
-const checkout: CheckoutSerialized = {
-  options: { product_id: import.meta.env.VITE_FREEMIUS_PRODUCT_ID! },
+const checkoutData: CheckoutSerialized = {
+  options: { 
+    product_id: Number(import.meta.env.VITE_FREEMIUS_PRODUCT_ID),
+    public_key: import.meta.env.VITE_FREEMIUS_PUBLIC_KEY, // Often required by the SDK
+  },
   link: `${import.meta.env.VITE_FREEMIUS_BASE_URL}/${import.meta.env.VITE_FREEMIUS_PRODUCT_ID}/`,
-  baseUrl: `${import.meta.env.VITE_FREEMIUS_BASE_URL}/`
+  baseUrl: import.meta.env.VITE_FREEMIUS_BASE_URL
 
 };
 const portalEndpoint = import.meta.env.VITE_FREEMIUS_PUBLIC_URL + '/api/portal';
@@ -44,7 +47,7 @@ export default function AccountPage() {
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
-              <CheckoutProvider endpoint={checkoutEndpoint} checkout={checkout}>
+              <CheckoutProvider endpoint={checkoutEndpoint} checkout={checkoutData}>
                 <CustomerPortal endpoint={portalEndpoint} />
               </CheckoutProvider>
             </div>

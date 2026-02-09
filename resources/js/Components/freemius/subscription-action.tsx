@@ -223,7 +223,7 @@ function PlanUpdateSection({
                     if (!plan.pricing?.length) {
                         return null;
                     }
-                    console.log('subscription.sandboxParam', subscription.sandboxParam);
+                    console.log('subscription.plan', plan);
                     if (plan.pricing.length === 1) {
                         return (
                             <DropdownMenuItem
@@ -235,7 +235,7 @@ function PlanUpdateSection({
                                         authorization: subscription.checkoutUpgradeAuthorization,
                                         plan_id: plan.id!,
                                         pricing_id: plan.closestPricing?.id,
-                                        sandbox: sandboxParams,
+                                        //sandbox: sandboxParams,
                                     })
                                 }
                             >
@@ -285,6 +285,7 @@ function PlanUpdateSection({
                                                         authorization: subscription.checkoutUpgradeAuthorization,
                                                         plan_id: plan.id!,
                                                         pricing_id: pricing.id,
+                                                        sandbox: sandboxParams,
                                                     })
                                                 }
                                             >
