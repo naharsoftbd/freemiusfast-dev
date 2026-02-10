@@ -1,6 +1,7 @@
 import type { PurchaseData, CheckoutSerialized } from '@freemius/sdk';
 import { CheckoutProvider } from '@/components/freemius/checkout-provider';
 import { Subscribe } from '@/components/freemius/subscribe';
+import { Topup } from '@/components/freemius/topup';
 
 const endpoint = '/api/checkout';
 const checkoutData: CheckoutSerialized = {

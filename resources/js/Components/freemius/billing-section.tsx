@@ -21,8 +21,6 @@ export function BillingSection(props: {
     const { user } = props;
     const fs_user_id = user.id;
 
-    console.log('billing', props.billing.updateUrl);
-
     React.useEffect(() => {
         async function loadBilling() {
             if (!fs_user_id) return; // Guard clause for missing ID

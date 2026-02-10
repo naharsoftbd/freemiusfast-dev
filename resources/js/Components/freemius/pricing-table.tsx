@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCheckout } from '@/hooks/checkout';
 import { useLocale } from '@/utils/locale';
 import CheckIcon from '@/icons/check';
+import { fetchUser } from '@/services/userService';
 
 export type PricingTableData = {
     id: string;
@@ -35,7 +36,35 @@ export function PricingTableItem(props: {
     const { plan, trial = false, onCheckout } = props;
     const checkout = useCheckout();
     const locale = useLocale();
-    console.log(plan);
+    const [userInfo, setUserInof] = React.useState(true);
+
+    React.useEffect(() => {
+        let isMounted = true;
+
+        const loadUser = async () => {
+            try {
+                const userInof = await fetchUser();
+
+                if (isMounted && userInof && Object.keys(userInof).length > 0) {
+                    setUserInof(userInof.data);
+                } else if (isMounted) {
+                    console.warn("No billing data found for this user.");
+                }
+            } catch (err) {
+                if (isMounted) {
+                    console.error("Failed to fetch billing:", err);
+                }
+            }
+        };
+
+        loadUser();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [fetchUser]);
+    console.log(userInfo);
+
     return (
         <Card className="relative flex flex-col h-full gap-2">
             <CardHeader className="text-center">
@@ -55,7 +84,7 @@ export function PricingTableItem(props: {
                     <div className="flex items-baseline gap-2 mb-2 justify-center">
                         <div className="text-3xl font-bold">{plan.price}</div>
                         <div className="text-sm text-muted-foreground">{locale.pricing.billingSeparator()}</div>
-                        <div className="text-sm text-muted-foreground">{plan.monthly_price ? locale.pricing.monthly():locale.pricing.annual()}</div>
+                        <div className="text-sm text-muted-foreground">{plan.monthly_price ? locale.pricing.monthly() : locale.pricing.annual()}</div>
                     </div>
                 </div>
 
@@ -83,22 +112,44 @@ export function PricingTableItem(props: {
             </CardContent>
 
             <CardFooter className="mt-6">
-                <Button
-                    className="w-full"
-                    variant={plan.featured ? 'default' : 'outline'}
-                    size="lg"
-                    onClick={() => {
-                        onCheckout?.();
-                        checkout.open({
-                            plan_id: plan.id,
-                            pricing_id: plan.pricing_id,
-                            trial: trial,
-                            sandbox: plan.sandboxParam,
-                        });
-                    }}
-                >
-                    {trial ? locale.pricing.action.trial() : locale.pricing.action.buynow()}
-                </Button>
+                {userInfo ? (
+                    <Button
+                        className="w-full"
+                        variant={plan.featured ? 'default' : 'outline'}
+                        size="lg"
+                        onClick={() => {
+                            onCheckout?.();
+                            checkout.open({
+                                plan_id: plan.id,
+                                pricing_id: plan.pricing_id,
+                                trial: trial,
+                                sandbox: plan.sandboxParam,
+                                user_email: userInfo?.email,
+                                user_firstname: userInfo?.first_name,
+                                user_lastname: userInfo?.last_name,
+                            });
+                        }}
+                    >
+                        {trial ? locale.pricing.action.trial() : locale.pricing.action.buynow()}
+                    </Button>
+                ) : (
+                    <Button
+                        className="w-full"
+                        variant={plan.featured ? 'default' : 'outline'}
+                        size="lg"
+                        onClick={() => {
+                            onCheckout?.();
+                            checkout.open({
+                                plan_id: plan.id,
+                                pricing_id: plan.pricing_id,
+                                trial: trial,
+                                sandbox: plan.sandboxParam,
+                            });
+                        }}
+                    >
+                        {trial ? locale.pricing.action.trial() : locale.pricing.action.buynow()}
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     );
@@ -139,7 +190,7 @@ export function PricingTable(props: {
                     parseNumber(monthly_price) ?? Infinity
                 );
             } else {
-               minPrice =  parseNumber(annual_price) ?? Infinity;
+                minPrice = parseNumber(annual_price) ?? Infinity;
             }
 
 

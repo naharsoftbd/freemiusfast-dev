@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Freemius\Subscription;
+use App\Models\Freemius\FreemiusBilling;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,8 +49,28 @@ class User extends Authenticatable
         ];
     }
 
+    // ✅ Tell Laravel to use uuid instead of id for route binding
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            if (empty($user->uuid)) {
+                $user->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
     public function subscription()
     {
         return $this->hasOne(Subscription::class);
+    }
+
+    public function freemiusBilling()
+    {
+        return $this->hasOne(FreemiusBilling::class);
     }
 }
