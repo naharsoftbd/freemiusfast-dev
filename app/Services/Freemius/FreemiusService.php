@@ -93,7 +93,22 @@ class FreemiusService
                 ];
             })->values()->all();
 
-            $plan['features'] = $planFeatures[$plan['id']] ?? [];
+            // ✅ Get Features dynamically
+            $featuresResponse = Http::withHeaders($this->headers)
+                ->get("{$this->baseUrl}/plans/{$plan['id']}/features.json");
+
+            $features = $featuresResponse->json('features');
+
+            $plan['features'] = collect($features)->map(function ($feature) {
+                return [
+                    'id' => $feature['id'],
+                    'title' => $feature['title'],
+                    'description' => $feature['description'],
+                    'is_featured' => $feature['is_featured'],
+                    'value' => $feature['value'],
+                ];
+            })->values()->all();
+
 
             $plan['sandboxParam'] = $this->getSandBoxParam() ?? [];
 

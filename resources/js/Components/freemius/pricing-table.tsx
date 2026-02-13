@@ -222,9 +222,9 @@ export function PricingTable(props: {
     if (tableData.length === 0) {
         return <p>No plans found that supports subscription</p>;
     }
-
+    console.log(plans.length);
     return (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className={`grid grid-cols-1 md:grid-cols-${tableData.length} gap-6`}>
             {tableData.map((plan) => (
                 <PricingTableItem key={plan.id} plan={plan} trial={trial} onCheckout={onCheckout} />
             ))}
