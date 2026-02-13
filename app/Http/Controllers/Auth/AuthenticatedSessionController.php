@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Jobs\Freemius\SyncFreemiusLicenses;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -31,7 +32,7 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
         $request->session()->regenerate();
-
+        SyncFreemiusLicenses::dispatch($request->user());
         // / Generate the token
         $token = $request->user()->createToken('API TOKEN')->plainTextToken;
 

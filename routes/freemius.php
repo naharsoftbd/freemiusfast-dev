@@ -3,6 +3,7 @@
 use App\Http\Controllers\Freemius\CheckoutController;
 use App\Http\Controllers\Freemius\FreemiusPaymentController;
 use App\Http\Controllers\Freemius\PortalController;
+use App\Http\Controllers\Freemius\FreemiusLicenseController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,4 +28,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/checkout', [CheckoutController::class, 'apiCheckout'])->name('freemius.api.checkout');
     Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
     Route::get('/order/invoices/{id}', [PortalController::class, 'downloadInvoice'])->name('download.invoice');
+    Route::get('/user/license/', [FreemiusLicenseController::class, 'index'])->name('user.license');
 });

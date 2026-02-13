@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Freemius\Subscription;
+use Illuminate\Support\Facades\Http;
 
 trait FreemiusConfigTrait
 {
@@ -34,10 +35,30 @@ trait FreemiusConfigTrait
     protected function getFsUserId(): ?string
     {
         $user = auth()->user();
+        
+        if (!$user) {
+            return null;
+        }
 
-        return $fs_user_id = Subscription::where('email', $user->email)->first()->fs_user_id;
+        $subscription = Subscription::where('email', $user->email)->first();
+
+        return $subscription ? $subscription->fs_user_id : null;
 
         // Removed for Hosted Checkout
         //return $user?->subscription?->fs_user_id ?? null;
+    }
+
+    protected function client()
+    {
+        return Http::withHeaders($this->headers)
+            ->timeout(15)
+            ->retry(3, 200);
+    }
+
+    protected function getBaseUrl()
+    {   
+        $baseUrl = "{$this->apiBaseUrl}/{$this->productId}";
+        
+        return $baseUrl;
     }
 }

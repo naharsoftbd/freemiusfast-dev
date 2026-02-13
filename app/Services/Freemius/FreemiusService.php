@@ -5,7 +5,6 @@ namespace App\Services\Freemius;
 use App\Models\User;
 use App\Traits\FreemiusConfigTrait;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class FreemiusService
 {
@@ -39,7 +38,7 @@ class FreemiusService
     public function downloadInvoice($paymentId)
     {
 
-        $response = Http::withHeaders($this->headers)->get(
+        $response = $this->client()->get(
             "{$this->baseUrl}/payments/{$paymentId}/invoice.pdf"
         );
 
@@ -55,13 +54,13 @@ class FreemiusService
     // Get All Plan Data
     public function getPlanData()
     {
-        $plansResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/plans.json");
+        $plansResponse = $this->client()->get("{$this->baseUrl}/plans.json");
 
         $plans = $plansResponse->json('plans');
 
         foreach ($plans as &$plan) {
 
-            $pricing = Http::withHeaders($this->headers)
+            $pricing = $this->client()
                 ->get("{$this->baseUrl}/plans/{$plan['id']}/pricing.json")
                 ->json('pricing');
 
@@ -73,7 +72,7 @@ class FreemiusService
             })->values()->all();
 
             // ✅ Get Features dynamically
-            $featuresResponse = Http::withHeaders($this->headers)
+            $featuresResponse = $this->client()
                 ->get("{$this->baseUrl}/plans/{$plan['id']}/features.json");
 
             $features = $featuresResponse->json('features');
@@ -121,8 +120,8 @@ class FreemiusService
         }
 
         // 2. Fetch Data in Parallel (or sequence)
-        $userResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->getFsUserId()}.json");
-        $subsResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->getFsUserId()}/subscriptions.json");
+        $userResponse = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}.json");
+        $subsResponse = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}/subscriptions.json");
 
         $rawSubscriptions = collect($subsResponse->json('subscriptions'));
         $primaryRaw = $rawSubscriptions->first();
@@ -156,7 +155,7 @@ class FreemiusService
     // Get payment data by plan
     public function getPaymentData($plans)
     {
-        $paymentsResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->getFsUserId()}/payments.json");
+        $paymentsResponse = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}/payments.json");
 
         $planMap = collect($plans)->keyBy('id');
         $payments = collect($paymentsResponse->json('payments'))->map(function ($payment) use ($planMap) {
@@ -265,7 +264,7 @@ class FreemiusService
     // Customer Portal billing information
     protected function getUserBilling(): array
     {
-        $response = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->getFsUserId()}/billing.json");
+        $response = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}/billing.json");
 
         if (! $response->successful()) {
             throw new \Exception('Unable to fetch billing info from Freemius');
@@ -297,7 +296,7 @@ class FreemiusService
     public function getUpgradeAuth($licenseId, $planId)
     {
         // Freemius API usually requires HMAC or Bearer Token
-        $response = Http::withHeaders($this->headers)
+        $response = $this->client()
             ->post("{$this->baseUrl}/licenses/{$licenseId}/checkout/link.json", [
                 'plan_id' => $planId,
                 // 'billing_cycle' => 'annual', (optional)
