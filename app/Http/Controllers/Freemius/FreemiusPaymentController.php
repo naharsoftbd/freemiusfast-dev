@@ -51,18 +51,20 @@ class FreemiusPaymentController extends Controller
             'pricing_id' => 'required|integer',
             'quota' => 'required|integer',
             'subscription_id' => 'nullable|integer',
-            'payment_id' => 'required|integer',
+            'payment_id' => 'nullable|integer',
             'signature' => 'required|string',
             'tax' => 'required|numeric',
         ]);
 
         // 3️⃣ Map Freemius user → local user
         $data['fs_user_id'] = $data['user_id'];
-        $data['user_id'] = auth()->id();
+        
+        // User Id Removed for Hosted checkout
+        unset($data['user_id']);
+        //$data['user_id'] = auth()->id(); 
 
         // 4. Idempotency (VERY IMPORTANT)
         $subscription = Subscription::firstOrCreate(
-            ['payment_id' => $data['payment_id']],
             $data
         );
 

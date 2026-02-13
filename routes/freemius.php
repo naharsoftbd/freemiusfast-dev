@@ -20,10 +20,11 @@ Route::get('/checkout', function () {
 })->name('freemius.checkout');
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout.store');
 
+// Without Auth for Hosted Checkout
+Route::get('/payment/success', [FreemiusPaymentController::class, 'paymentSuccess'])->name('payment.success');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/checkout', [CheckoutController::class, 'apiCheckout'])->name('freemius.api.checkout');
     Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
     Route::get('/order/invoices/{id}', [PortalController::class, 'downloadInvoice'])->name('download.invoice');
-
-    Route::get('/payment/success', [FreemiusPaymentController::class, 'paymentSuccess'])->name('payment.success');
 });

@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Models\Freemius\Subscription;
+
 trait FreemiusConfigTrait
 {
     protected string $accessToken;
@@ -33,6 +35,9 @@ trait FreemiusConfigTrait
     {
         $user = auth()->user();
 
-        return $user?->subscription?->fs_user_id ?? null;
+        return $fs_user_id = Subscription::where('email', $user->email)->first()->fs_user_id;
+
+        // Removed for Hosted Checkout
+        //return $user?->subscription?->fs_user_id ?? null;
     }
 }

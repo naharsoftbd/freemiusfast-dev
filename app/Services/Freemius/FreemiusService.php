@@ -59,27 +59,6 @@ class FreemiusService
 
         $plans = $plansResponse->json('plans');
 
-        $planFeatures = [
-            39394 => [ // Plan ID
-                ['title' => 'Unlimited Patients', 'included' => true],
-                ['title' => 'Digital Prescriptions', 'included' => true],
-                ['title' => 'Multi-Doctor Support', 'included' => true],
-                ['title' => 'Email Support', 'included' => true],
-            ],
-            39400 => [
-                ['title' => 'Unlimited Patients', 'included' => true],
-                ['title' => 'Digital Prescriptions', 'included' => true],
-                ['title' => 'Multi-Doctor Support', 'included' => false],
-                ['title' => 'Priority Support', 'included' => false],
-            ],
-            39873 => [
-                ['title' => 'Unlimited Patients', 'included' => true],
-                ['title' => 'Digital Prescriptions', 'included' => true],
-                ['title' => 'Multi-Doctor Support', 'included' => false],
-                ['title' => 'Priority Support', 'included' => false],
-            ],
-        ];
-
         foreach ($plans as &$plan) {
 
             $pricing = Http::withHeaders($this->headers)
