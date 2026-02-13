@@ -6,6 +6,8 @@
   <img src="https://img.shields.io/badge/Monetization-Freemius-blue?style=for-the-badge" />
 </p>
 
+[![Download Freemiusfast](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/freemiusfast/files/latest/download)
+
 
 **Freemiusfast** is a professional-grade SaaS boilerplate designed specifically for developers selling web applications through the [Freemius](https://freemius.com/) ecosystem. It combines the power of a Laravel backend with a modern React SPA frontend to create a seamless licensing and management experience.
 
