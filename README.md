@@ -21,7 +21,6 @@
 ### Inactive Plan Account
 <p align="center">
   <img src="/public/screenshot/inactive_plan.png" width="800" alt="Inactive Plan Screenshot" />
-  <img src="/public/screenshot/active_plan_account.png" width="800" alt="Active Plan Screenshot" />
 </p>
 
 ### Active Plan Account
