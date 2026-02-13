@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,8 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'first_name',
+        'last_name',
         'name',
         'email',
         'password',
@@ -60,6 +63,16 @@ class User extends Authenticatable
         static::creating(function ($user) {
             if (empty($user->uuid)) {
                 $user->uuid = (string) Str::uuid();
+            }
+        });
+
+        /**
+         * Automatically set the `name` when first_name or last_name changes
+         */
+
+        static::saving(function ($user) {
+            if ($user->first_name || $user->last_name) {
+                $user->name = trim($user->first_name . ' ' . $user->last_name);
             }
         });
     }

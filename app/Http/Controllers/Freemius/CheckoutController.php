@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Freemius;
 use App\Http\Controllers\Controller;
 use App\Services\Freemius\FreemiusService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CheckoutController extends Controller
 {
@@ -15,7 +16,7 @@ class CheckoutController extends Controller
         $this->freemiusService = $freemiusService;
     }
 
-    public function checkout(Request $request)
+    public function apiCheckout(Request $request)
     {
         $plans = $this->freemiusService->checkout();
 
@@ -26,5 +27,10 @@ class CheckoutController extends Controller
             ],
             'plans' => $plans,
         ]);
+    }
+
+    public function checkout(Request $request)
+    { 
+        return Inertia::render('Freemius/PricingPage');
     }
 }

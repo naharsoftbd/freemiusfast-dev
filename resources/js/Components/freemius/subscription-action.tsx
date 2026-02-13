@@ -67,10 +67,9 @@ export function SubscriptionAction(props: {
             .map((plan) => {
                 const filteredPricing: EnrichedPricing[] | undefined = plan.pricing
                     ?.filter((pricing) => {
-                        console.log('pricing',parseCurrency(pricing.currency));
                         return (
                             (pricing.annual_price || pricing.monthly_price) &&
-                            parseCurrency(pricing.currency) === subscription.currency.toUpperCase()
+                            subscription?.currency ? parseCurrency(pricing.currency) === subscription?.currency?.toUpperCase():true
                         );
                     })
                     .map((pricing) => {
@@ -224,7 +223,6 @@ function PlanUpdateSection({
                     if (!plan.pricing?.length) {
                         return null;
                     }
-                    console.log('subscription.plan', plan.sandboxParam);
                     if (plan.pricing.length === 1) {
                         return (
                             <DropdownMenuItem

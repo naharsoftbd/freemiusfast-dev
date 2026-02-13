@@ -14,8 +14,14 @@ Route::get('/account', function () {
     return Inertia::render('Freemius/AccountPage');
 })->middleware(['auth', 'verified'])->name('portal.account');
 
+
+Route::get('/checkout', function () {
+    return Inertia::render('Freemius/Checkout');
+})->name('freemius.checkout');
+Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout.store');
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/api/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout');
+    Route::get('/api/checkout', [CheckoutController::class, 'apiCheckout'])->name('freemius.api.checkout');
     Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
     Route::get('/order/invoices/{id}', [PortalController::class, 'downloadInvoice'])->name('download.invoice');
 

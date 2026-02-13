@@ -64,13 +64,13 @@ class FreemiusUserController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'id' => $request->user()->id,
-                'name' => $request->user()->name,
-                'email' => $request->user()->email,
-                'first_name' => $billinginfo?->first,
-                'last_name' => $billinginfo?->last,
-                'phone' => $billinginfo?->phone,
-                'created_at' => $request->user()->created_at,
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'first_name' => $billinginfo?->first ?? '',
+                'last_name' => $billinginfo?->last ?? '',
+                'phone' => $billinginfo?->phone ?? '',
+                'created_at' => $user->created_at,
             ],
             'message' => 'User info retrieved successfully',
         ]);

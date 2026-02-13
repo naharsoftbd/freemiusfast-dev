@@ -109,6 +109,8 @@ class FreemiusService
     public function getPortalData()
     {
         $user = Auth::user();
+        $plans = $this->getPlanData();
+        $payments = $this->getPaymentData($plans);
         // 1. Safety check
         if (! $this->getFsUserId()) {
             return response()->json([
@@ -118,8 +120,8 @@ class FreemiusService
                     'primary' => [],
                     'all' => [],
                 ],
-                'plans' => [],
-                'payments' => [],
+                'plans' => $plans,
+                'payments' => $payments,
                 'sellingUnit' => 'site', // or 'user'/'license'
             ]);
         }
@@ -127,10 +129,6 @@ class FreemiusService
         // 2. Fetch Data in Parallel (or sequence)
         $userResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->getFsUserId()}.json");
         $subsResponse = Http::withHeaders($this->headers)->get("{$this->baseUrl}/users/{$this->getFsUserId()}/subscriptions.json");
-
-        $plans = $this->getPlanData();
-
-        $payments = $this->getPaymentData($plans);
 
         $rawSubscriptions = collect($subsResponse->json('subscriptions'));
         $primaryRaw = $rawSubscriptions->first();
