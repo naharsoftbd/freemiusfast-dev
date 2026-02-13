@@ -66,7 +66,10 @@ export function PricingTableItem(props: {
     console.log(userInfo);
 
     return (
-        <Card className="relative flex flex-col h-full gap-2">
+        <Card className={`relative flex flex-col h-full gap-2 ${plan.featured
+            ? 'bg-blue-50 border-2 border-blue-600 shadow-xl scale-105'
+            : 'bg-white border shadow-sm'
+            }`}>
             <CardHeader className="text-center">
                 <div className="flex items-center justify-center gap-2">
                     <CardTitle className="text-xl">{plan.title}</CardTitle>
