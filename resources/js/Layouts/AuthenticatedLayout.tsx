@@ -10,6 +10,9 @@ export default function Authenticated({
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
     const user = usePage().props.auth.user;
+    const { auth } = usePage().props as any;
+    const roles = auth?.roles || [];
+
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -25,6 +28,16 @@ export default function Authenticated({
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
+                            {roles.includes('Admin') && (
+                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink
+                                        href={route('admin.freemius.settings')}
+                                        active={route().current('admin.freemius.settings')}
+                                    >
+                                        Freemius Settings
+                                    </NavLink>
+                                </div>
+                            )}
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink

@@ -48,7 +48,7 @@ class FreemiusUserController extends Controller
     }
 
     public function me(Request $request)
-    {        
+    {
         $user = auth()->user();
 
         if (! $user) {
@@ -59,7 +59,6 @@ class FreemiusUserController extends Controller
         }
 
         $billinginfo = $user?->freemiusBilling;
-
 
         return response()->json([
             'success' => true,

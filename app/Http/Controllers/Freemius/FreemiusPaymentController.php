@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Freemius;
 
 use App\Http\Controllers\Controller;
-use App\Models\Freemius\Subscription;
+use App\Models\Freemius\UserFsEntitlement;
 use App\Services\Freemius\FreemiusService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,6 +20,14 @@ class FreemiusPaymentController extends Controller
 
     public function paymentSuccess(Request $request)
     {
+        // 1. Get the signature from the URL (since it's not in the headers)
+        $receivedSignature = $_GET['signature'] ?? null;
+
+        if (! $receivedSignature) {
+            \Log::error('Freemius Redirect: Signature missing from URL.');
+
+            return redirect('/')->with('error', 'Security signature missing.');
+        }
         // 1. Verify the Signature
         $protocol = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'];
@@ -29,8 +37,6 @@ class FreemiusPaymentController extends Controller
         $signature_pos = strpos($current_url, '&signature=');
         $clean_url = substr($current_url, 0, $signature_pos);
 
-        $receivedSignature = $request->input('signature');
-
         if (! $this->freemiusService->isSignatureValid($clean_url, $receivedSignature)) {
             Log::warning('Unauthorized Freemius attempt detected.', ['$clean_url' => $clean_url]);
 
@@ -38,7 +44,7 @@ class FreemiusPaymentController extends Controller
         }
 
         // 2️⃣ Validate input
-        $data = Validator::validate($request->all(), [
+        $validated = Validator::validate($request->all(), [
             'user_id' => 'required|integer',
             'action' => 'required|string',
             'amount' => 'required|numeric',
@@ -57,16 +63,11 @@ class FreemiusPaymentController extends Controller
         ]);
 
         // 3️⃣ Map Freemius user → local user
-        $data['fs_user_id'] = $data['user_id'];
-        
-        // User Id Removed for Hosted checkout
-        unset($data['user_id']);
-        //$data['user_id'] = auth()->id(); 
+        $validated['fs_user_id'] = $validated['user_id'];
+        $validated['user_id'] = auth()->id();
 
         // 4. Idempotency (VERY IMPORTANT)
-        $subscription = Subscription::firstOrCreate(
-            $data
-        );
+        $subscription = UserFsEntitlement::Create($validated);
 
         // 5. Redirect user (NOT JSON)
         return redirect()

@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'api_token' => $request->session()->get('api_token'),
+                'roles' => $request->user()?->getRoleNames(),
             ],
         ];
     }

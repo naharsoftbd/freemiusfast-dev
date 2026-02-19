@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('freemius_licenses', function (Blueprint $table) {
             $table->id();
             // Freemius External IDs (Storing as strings to avoid precision issues with large IDs)
-            $table->unsignedBigInteger('freemius_id')->unique(); 
+            $table->unsignedBigInteger('freemius_id')->unique();
             // Freemius user reference
-            $table->unsignedBigInteger('fs_user_id')->unique()->nullable();
+            $table->unsignedBigInteger('fs_user_id');
             $table->string('product_id')->index();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('plan_id')->nullable();
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->integer('activated')->default(0);
             $table->integer('activated_local')->default(0);
             $table->mediumText('secret_key');
-            
+
             // Boolean Flags
             $table->boolean('is_free_localhost')->default(false);
             $table->boolean('is_block_features')->default(false);

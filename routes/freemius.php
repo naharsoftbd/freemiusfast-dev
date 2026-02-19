@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Freemius\CheckoutController;
-use App\Http\Controllers\Freemius\FreemiusPaymentController;
-use App\Http\Controllers\Freemius\PortalController;
 use App\Http\Controllers\Freemius\FreemiusLicenseController;
+use App\Http\Controllers\Freemius\FreemiusPaymentController;
+use App\Http\Controllers\Freemius\FreemiusProductController;
+use App\Http\Controllers\Freemius\FreemiusSettingController;
+use App\Http\Controllers\Freemius\PortalController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,18 +17,24 @@ Route::get('/account', function () {
     return Inertia::render('Freemius/AccountPage');
 })->middleware(['auth', 'verified'])->name('portal.account');
 
-
 Route::get('/checkout', function () {
     return Inertia::render('Freemius/Checkout');
 })->name('freemius.checkout');
-Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout.store');
 
-// Without Auth for Hosted Checkout
+Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('freemius.checkout.store');
+Route::get('/api/checkout', [CheckoutController::class, 'apiCheckout'])->name('freemius.api.checkout');
 Route::get('/payment/success', [FreemiusPaymentController::class, 'paymentSuccess'])->name('payment.success');
 
+Route::get('/developer', [CheckoutController::class, 'developer'])->name('freemius.developer');
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/api/checkout', [CheckoutController::class, 'apiCheckout'])->name('freemius.api.checkout');
     Route::get('/api/portal', [PortalController::class, 'getPortal'])->name('freemius.portal');
     Route::get('/order/invoices/{id}', [PortalController::class, 'downloadInvoice'])->name('download.invoice');
     Route::get('/user/license/', [FreemiusLicenseController::class, 'index'])->name('user.license');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:Admin'])->group(function () {
+    Route::resource('freemius-products', FreemiusProductController::class);
+    Route::get('/freemius/settings', [FreemiusSettingController::class, 'getFreemiusProductSetting'])->name('freemius.settings');
+    Route::post('/freemius/settings', [FreemiusSettingController::class, 'setFreemiusProductSetting'])->name('freemius.settings.store');
 });

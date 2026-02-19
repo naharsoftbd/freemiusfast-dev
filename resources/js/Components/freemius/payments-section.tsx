@@ -12,7 +12,7 @@ import PaginatedList from './paginated-list';
 export function PaymentsSection(props: { payments: PortalPayment[]; unit: SellingUnit }) {
     const { payments } = props;
     const locale = useLocale();
-
+        console.log(props.unit);
     return (
         <div className="fs-saas-starter-payments-section">
             <SectionHeading>{locale.portal.payments.title()}</SectionHeading>
@@ -28,7 +28,7 @@ export function PaymentsSection(props: { payments: PortalPayment[]; unit: Sellin
                 {(payment) => (
                     <div
                         key={payment.id}
-                        className="fs-saas-starter-payments-section__payment grid items-center col-span-full grid-cols-[auto_auto_auto] grid-rows-2 gap-2 lg:grid-cols-subgrid lg:grid-rows-1 lg:gap-6"
+                        className="fs-saas-starter-payments-section__payment grid items-center col-span-full grid-cols-[repeat(6,minmax(0,1fr))] grid-rows-2 gap-2  lg:grid-rows-1 lg:gap-6"
                     >
                         <div className="fs-saas-starter-payments-section__date flex gap-1 items-center">
                             <PaymentIcon method={payment.paymentMethod} />
@@ -51,6 +51,10 @@ export function PaymentsSection(props: { payments: PortalPayment[]; unit: Sellin
                         </div>
 
                         <div className="fs-saas-starter-payments-section__plan col-span-2 lg:col-span-1">
+                            {payment.product_title}
+                        </div>
+
+                        <div className="fs-saas-starter-payments-section__plan col-span-2 lg:col-span-1">
                             {payment.planTitle}{' '}
                             {payment.quota && payment.quota > 1 ? (
                                 <span className="text-disabled-foreground text-xs font-semibold">
@@ -59,6 +63,7 @@ export function PaymentsSection(props: { payments: PortalPayment[]; unit: Sellin
                                         payment.quota,
                                         props.unit
                                     )}
+                                    {props.unit?.toLocaleLowerCase()}
                                 </span>
                             ) : null}
                         </div>

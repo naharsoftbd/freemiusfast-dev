@@ -4,24 +4,25 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Jobs\Freemius\SyncFreemiusLicenses;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Jobs\Freemius\SyncFreemiusLicenses;
+use App\Jobs\Freemius\SyncFreemiusCustomerData;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Show the login page.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
+            'status' => $request->session()->get('status'),
         ]);
     }
 
@@ -31,12 +32,23 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+
         $request->session()->regenerate();
-        SyncFreemiusLicenses::dispatch($request->user());
+
         // / Generate the token
         $token = $request->user()->createToken('API TOKEN')->plainTextToken;
 
-        return redirect()->intended(route('portal.account', absolute: false))->with('api_token', $token);
+        // Check Role
+        if ($request->user()->hasRole('Admin')) {
+            // Force Admins to Dashboard
+            return redirect()->route('dashboard')->with('api_token', $token);
+        }
+
+        SyncFreemiusLicenses::dispatch($request->user());
+        SyncFreemiusCustomerData::dispatch($request->user());
+        // Force regular users to Portal Account with the token
+        return redirect()->route('portal.account')->with('api_token', $token);
+
     }
 
     /**
@@ -49,7 +61,6 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');

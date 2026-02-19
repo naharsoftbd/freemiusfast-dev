@@ -3,18 +3,21 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Freemius\Subscription;
 use App\Models\Freemius\FreemiusBilling;
+use App\Models\Freemius\UserFsEntitlement;
+use App\Models\Freemius\FreemiusPayment;
+use App\Models\Freemius\Subscription;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -77,13 +80,23 @@ class User extends Authenticatable
         });
     }
 
-    public function subscription()
+    public function entitlement()
     {
-        return $this->hasOne(Subscription::class);
+        return $this->hasOne(UserFsEntitlement::class);
     }
 
     public function freemiusBilling()
     {
         return $this->hasOne(FreemiusBilling::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function freemiusPayment()
+    {
+        return $this->hasMany(FreemiusPayment::class);
     }
 }

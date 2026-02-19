@@ -36,7 +36,7 @@ export function PricingTableItem(props: {
     const { plan, trial = false, onCheckout } = props;
     const checkout = useCheckout();
     const locale = useLocale();
-    const [userInfo, setUserInof] = React.useState(true);
+    const [userInfo, setUserInof] = React.useState([]);
 
     React.useEffect(() => {
         let isMounted = true;
@@ -63,8 +63,7 @@ export function PricingTableItem(props: {
             isMounted = false;
         };
     }, [fetchUser]);
-    console.log(userInfo);
-
+    console.log('userInfo', Object.keys(userInfo).length);
     return (
         <Card className={`relative flex flex-col h-full gap-2 ${plan.featured
             ? 'bg-blue-50 border-2 border-blue-600 shadow-xl scale-105'
@@ -115,7 +114,7 @@ export function PricingTableItem(props: {
             </CardContent>
 
             <CardFooter className="mt-6">
-                {userInfo ? (
+                {Object.keys(userInfo).length > 0 ? (
                     <Button
                         className="w-full"
                         variant={plan.featured ? 'default' : 'outline'}
@@ -130,6 +129,19 @@ export function PricingTableItem(props: {
                                 user_email: userInfo?.email,
                                 user_firstname: userInfo?.first_name,
                                 user_lastname: userInfo?.last_name,
+                                purchaseCompleted: (response) => {
+                                    // The logic here will be executed immediately after the purchase confirmation
+                                    console.log('Purchase completed:', response);
+                                    console.log('User email:', response.user.email);
+                                    console.log('License key:', response.license.key);
+                                },
+                                success: (response) => {
+                                    // The logic here will be executed after the customer closes the checkout, 
+                                    // after a successful purchase
+                                    console.log('Checkout closed after successful purchase:', response);
+                                    console.log('User email:', response.user.email);
+                                    console.log('License key:', response.license.key);
+                                }
                             });
                         }}
                     >
@@ -140,17 +152,9 @@ export function PricingTableItem(props: {
                         className="w-full"
                         variant={plan.featured ? 'default' : 'outline'}
                         size="lg"
-                        onClick={() => {
-                            onCheckout?.();
-                            checkout.open({
-                                plan_id: plan.id,
-                                pricing_id: plan.pricing_id,
-                                trial: trial,
-                                sandbox: plan.sandboxParam,
-                            });
-                        }}
+                        disabled
                     >
-                        {trial ? locale.pricing.action.trial() : locale.pricing.action.buynow()}
+                        Login required
                     </Button>
                 )}
             </CardFooter>
@@ -204,7 +208,7 @@ export function PricingTable(props: {
                     features.push({ title: feature.title, value: feature.value });
                 }
             });
-            console.log(pricing.id);
+
             data.push({
                 id: plan.id!,
                 pricing_id: pricing.id!,
@@ -225,9 +229,19 @@ export function PricingTable(props: {
     if (tableData.length === 0) {
         return <p>No plans found that supports subscription</p>;
     }
-    console.log(plans.length);
+
+    const gridColsMap = {
+        1: 'md:grid-cols-1',
+        2: 'md:grid-cols-2',
+        3: 'md:grid-cols-3',
+        4: 'md:grid-cols-4',
+        5: 'md:grid-cols-5',
+        6: 'md:grid-cols-6',
+        // add more as needed
+    };
+
     return (
-        <div className={`grid grid-cols-1 md:grid-cols-${tableData.length} gap-6`}>
+        <div className={`grid grid-cols-1 gap-6 ${gridColsMap[tableData.length] || 'md:grid-cols-3'}`}>
             {tableData.map((plan) => (
                 <PricingTableItem key={plan.id} plan={plan} trial={trial} onCheckout={onCheckout} />
             ))}

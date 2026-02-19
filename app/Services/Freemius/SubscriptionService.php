@@ -3,7 +3,7 @@
 namespace App\Services\Freemius;
 
 use App\Traits\FreemiusConfigTrait;
-use Illuminate\Support\Facades\Http;
+use App\Jobs\Freemius\SyncFreemiusCustomerData;
 
 class SubscriptionService
 {
@@ -20,7 +20,7 @@ class SubscriptionService
     // Subscription Cancel
     public function cancelSubscription(int|string $subscriptionId, ?string $reason = null, array $reasonIds = [])
     {
-        $response = Http::withHeaders($this->headers)
+        $response = $this->client()
             ->delete(
                 "{$this->baseUrl}/subscriptions/{$subscriptionId}.json",
                 [
@@ -28,7 +28,7 @@ class SubscriptionService
                     'reason_ids' => $reasonIds,
                 ]
             );
-
+        SyncFreemiusCustomerData::dispatch(auth()->user());
         return $response->json();
     }
 }

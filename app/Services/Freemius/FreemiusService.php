@@ -2,9 +2,17 @@
 
 namespace App\Services\Freemius;
 
+use App\Models\Freemius\FreemiusPlan;
 use App\Models\User;
 use App\Traits\FreemiusConfigTrait;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use App\Http\Resources\PlanResource;
+use App\Models\Freemius\Subscription;
+use App\Http\Resources\Freemius\SubscriptionResource;
+use Illuminate\Support\Facades\Log;
+use App\Http\Resources\Freemius\FreemiusPaymentResource;
+use App\Models\Freemius\FreemiusPayment;
 
 class FreemiusService
 {
@@ -48,62 +56,31 @@ class FreemiusService
     // Ccheckout API Indpoint data
     public function checkout()
     {
-        return $this->getPlanData();
+        return PlanResource::collection($this->getPlanData());
     }
 
     // Get All Plan Data
     public function getPlanData()
     {
-        $plansResponse = $this->client()->get("{$this->baseUrl}/plans.json");
+        $sandboxParam = $this->getSandBoxParam() ?? [];
 
-        $plans = $plansResponse->json('plans');
-
-        foreach ($plans as &$plan) {
-
-            $pricing = $this->client()
-                ->get("{$this->baseUrl}/plans/{$plan['id']}/pricing.json")
-                ->json('pricing');
-
-            $plan['pricing'] = collect($pricing)->map(function ($price) {
-                return [
-                    ...$price,
-                    'currency' => $price['currency'],
-                ];
-            })->values()->all();
-
-            // ✅ Get Features dynamically
-            $featuresResponse = $this->client()
-                ->get("{$this->baseUrl}/plans/{$plan['id']}/features.json");
-
-            $features = $featuresResponse->json('features');
-
-            $plan['features'] = collect($features)->map(function ($feature) {
-                return [
-                    'id' => $feature['id'],
-                    'title' => $feature['title'],
-                    'description' => $feature['description'],
-                    'is_featured' => $feature['is_featured'],
-                    'value' => $feature['value'],
-                ];
-            })->values()->all();
-
-
-            $plan['sandboxParam'] = $this->getSandBoxParam() ?? [];
-
-        }
-
-        unset($plan);
-
-        return $plans;
-
+         $plans = FreemiusPlan::with('pricings', 'features')->where('plugin_id', $this->productId)->get()
+                    ->each(function ($plan) use ($sandboxParam) {
+                        $plan->sandboxParam = $sandboxParam;
+                    });
+         
+         return $plans;
     }
 
     // Customer Portal API Indpoint Data
     public function getPortalData()
     {
         $user = Auth::user();
-        $plans = $this->getPlanData();
-        $payments = $this->getPaymentData($plans);
+        // Load relationships to avoid N+1
+        $user->load(['subscriptions.plan']);
+
+        $plans = PlanResource::collection($this->getPlanData());
+        
         // 1. Safety check
         if (! $this->getFsUserId()) {
             return response()->json([
@@ -114,25 +91,18 @@ class FreemiusService
                     'all' => [],
                 ],
                 'plans' => $plans,
-                'payments' => $payments,
+                'payments' => [],
                 'sellingUnit' => 'site', // or 'user'/'license'
             ]);
         }
-
+        $payments = $this->getPaymentData($plans);
         // 2. Fetch Data in Parallel (or sequence)
         $userResponse = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}.json");
-        $subsResponse = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}/subscriptions.json");
-
-        $rawSubscriptions = collect($subsResponse->json('subscriptions'));
-        $primaryRaw = $rawSubscriptions->first();
-
-        $primary = $primaryRaw
-            ? $this->mapPortalSubscription($primaryRaw, $plans)
-            : null;
-
-        $past = $rawSubscriptions
-            ->map(fn ($sub) => $this->mapPortalSubscription($sub, $plans))
-            ->values();
+        
+        $subscriptions = $user->subscriptions->sortByDesc('freemius_created_at');
+        $primary = $subscriptions->first(); // or however you define primary
+        $active = $subscriptions->whereNull('cancelled_at');
+        $past = $subscriptions->whereNotNull('cancelled_at');
 
         $billing = $this->getUserBilling();
 
@@ -141,9 +111,11 @@ class FreemiusService
             'user' => $userResponse->json(),
             'subscriptions' => [
                 // React component looks for 'primary' to show the main card
-                'primary' => $primary,
-                'active' => $primary,
-                'past' => $past,
+                'primary' => $primary
+                ? new SubscriptionResource($primary)
+                : null,
+                'active' => SubscriptionResource::collection($active),
+                'past' => SubscriptionResource::collection($past),
             ],
             'plans' => $plans,
             'payments' => $payments,
@@ -155,43 +127,20 @@ class FreemiusService
     // Get payment data by plan
     public function getPaymentData($plans)
     {
-        $paymentsResponse = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}/payments.json");
+        $payments = FreemiusPayment::where('fs_user_id', $this->getFsUserId())->where('plugin_id', $this->productId)
+                    ->with('product')->get();
 
-        $planMap = collect($plans)->keyBy('id');
-        $payments = collect($paymentsResponse->json('payments'))->map(function ($payment) use ($planMap) {
-            $plan = $planMap->get((int) $payment['plan_id']);
-            $publicUrl = config('freemius.public_url');
-
-            return [
-                // keep original fields if needed
-                ...$payment,
-
-                // ✅ REQUIRED BY PortalPayment TYPE
-                'createdAt' => \Carbon\Carbon::parse($payment['created'])->toISOString(),
-
-                'paymentMethod' => match ($payment['gateway']) {
-                    'stripe' => 'card',
-                    'paypal' => 'paypal',
-                    default => 'unknown',
-                },
-
-                'invoiceUrl' => "{$publicUrl}/order/invoices/{$payment['id']}",
-
-                'quota' => $plan['licenses'] ?? null,
-                'planTitle' => $plan['title'] ?? 'Unknown Plan',
-            ];
-        })->values();
-
-        return $payments;
-
+        return FreemiusPaymentResource::collection($payments);
     }
 
     // Customer Portal Subscription data by Plan
-    protected function mapPortalSubscription(array $sub, array $plans): array
+    public function mapPortalSubscription(array $sub, $plans): array
     {
-        $plan = collect($plans)->firstWhere('id', (int) $sub['plan_id']);
-
+        $plan = collect($plans)->firstWhere('plan_id', (int) $sub['plan_id']);
+        $pricing = $plan->pricings->where('pricing_id', (int) $sub['pricing_id'])->first();
+        
         return [
+            ...$sub,
             'subscriptionId' => (string) $sub['id'],
             'licenseId' => (string) $sub['license_id'],
             'planId' => (string) $sub['plan_id'],
@@ -220,7 +169,7 @@ class FreemiusService
 
             'checkoutUpgradeAuthorization' => $this->getUpgradeAuth($sub['license_id'], $sub['plan_id']),
 
-            'quota' => $plan['licenses'] ?? null,
+            'quota' => $pricing->licenses ?? null,
 
             'paymentMethod' => $sub['gateway']
                 ? [
@@ -264,13 +213,7 @@ class FreemiusService
     // Customer Portal billing information
     protected function getUserBilling(): array
     {
-        $response = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}/billing.json");
-
-        if (! $response->successful()) {
-            throw new \Exception('Unable to fetch billing info from Freemius');
-        }
-
-        $rawBilling = $response->json();
+        $billing = $this->freemiusBillingService->getUserBilling($this->getFsUserId());
 
         $billing = [
             'business_name' => $rawBilling['business_name'] ?? null,
@@ -286,9 +229,8 @@ class FreemiusService
             'address_zip' => $rawBilling['address_zip'] ?? null,
             'address_country' => $rawBilling['address_country'] ?? null,
             'address_country_code' => $rawBilling['address_country_code'] ?? null,
+            'fs_user_id' => $this->getFsUserId(),
         ];
-
-        // $billing = $this->freemiusBillingService->updateByFsUserId($billing, $this->fsUserId);
 
         return $billing;
     }

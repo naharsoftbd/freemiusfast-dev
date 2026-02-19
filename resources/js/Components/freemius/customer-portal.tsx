@@ -104,7 +104,7 @@ export function CustomerPortalEmpty(props: {
 export function CustomerPortalUi(props: { portalData: PortalData; refresh: () => void }) {
     const { portalData, refresh } = props;
     const locale = useLocale();
-
+    
     return (
         <div className="fs-saas-starter-portal flex flex-col gap-16">
             {portalData.subscriptions.primary ? (

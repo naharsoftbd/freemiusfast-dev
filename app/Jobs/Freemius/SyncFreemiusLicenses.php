@@ -2,12 +2,10 @@
 
 namespace App\Jobs\Freemius;
 
+use App\Services\Freemius\FreemiusLicenseService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Services\Freemius\FreemiusLicenseService;
 
 class SyncFreemiusLicenses implements ShouldQueue
 {
@@ -20,7 +18,7 @@ class SyncFreemiusLicenses implements ShouldQueue
      */
     public function __construct($user)
     {
-       $this->user = $user; 
+        $this->user = $user;
     }
 
     /**

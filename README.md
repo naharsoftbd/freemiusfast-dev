@@ -30,6 +30,12 @@
   <img src="/public/screenshot/active_plan_account.png" width="800" alt="Active Plan Screenshot" />
 </p>
 
+### Freemius Setting
+<p align="center">
+  <img src="/public/screenshot/admin_freemius_settings.jpg" width="800" alt="Freemius Setting" />
+</p>
+
+
 ---
 
 ## 🛠 Installation
@@ -58,21 +64,16 @@ Create your environment file and generate the application key:
 ```bash
 cp .env.example .env
 php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan user:create-admin
 ```
 
 ### 4. Freemius Configuration
-Add your Freemius developer credentials to your .env file to enable licensing features:
+Add your Freemius developer credentials to your dashobard to enable licensing features:
+<p align="center">
+  <img src="/public/screenshot/admin_freemius_settings.jpg" width="800" alt="Freemius Setting" />
+</p>
 
-```bash
-VITE_FREEMIUS_PRODUCT_ID="----"
-VITE_FREEMIUS_API_KEY="---"
-VITE_FREEMIUS_SECRET_KEY="---"
-VITE_FREEMIUS_PUBLIC_KEY="---"
-VITE_FREEMIUS_PUBLIC_URL='http://127.0.0.1:8000'
-VITE_FREEMIUS_BASE_URL='---'
-VITE_FREEMIUS_PLAN_ID="---"
-VITE_FREEMIUS_API_BASE_URL='---'
-```
 
 ## 🔑 Licensing Architecture
 Freemiusfast utilizes a middleware-based approach to verify Freemiusfast licenses. This ensures that premium React components and Laravel routes are only accessible to authorized users.

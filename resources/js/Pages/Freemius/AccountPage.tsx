@@ -1,37 +1,44 @@
 import { CustomerPortal } from '@/components/freemius/customer-portal';
 import { CheckoutProvider } from '@/components/freemius/checkout-provider';
-import { type CheckoutOptions } from '@freemius/checkout';
 import type { PurchaseData, CheckoutSerialized } from '@freemius/sdk';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import { useEffect } from 'react';
-import { usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+import echo from '../../echo';
 
-const checkoutEndpoint = import.meta.env.VITE_FREEMIUS_PUBLIC_URL + '/api/checkout';
-const checkoutOptions: CheckoutOptions = {
-  product_id: import.meta.env.VITE_FREEMIUS_PRODUCT_ID!,
-};
-const checkoutData: CheckoutSerialized = {
-  options: { 
-    product_id: Number(import.meta.env.VITE_FREEMIUS_PRODUCT_ID),
-    public_key: import.meta.env.VITE_FREEMIUS_PUBLIC_KEY, // Often required by the SDK
-  },
-  link: `${import.meta.env.VITE_FREEMIUS_BASE_URL}/${import.meta.env.VITE_FREEMIUS_PRODUCT_ID}/`,
-  baseUrl: import.meta.env.VITE_FREEMIUS_BASE_URL
 
-};
-const portalEndpoint = import.meta.env.VITE_FREEMIUS_PUBLIC_URL + '/api/portal';
 
 export default function AccountPage() {
+  const { auth, freemius } = usePage().props;
+  const [reloadKey, setReloadKey] = useState(0);
 
-  const { auth } = usePage().props;
+  const checkoutEndpoint = freemius.public_url + '/api/checkout';
+  const checkoutData: CheckoutSerialized = {
+    options: {
+      product_id: Number(freemius.product_id),
+      public_key: freemius.public_key, // Often required by the SDK
+    },
+    link: `${freemius.base_url}/${freemius.product_id}//`,
+    baseUrl: freemius.base_url
+  };
+
+  const portalEndpoint = freemius.public_url + '/api/portal';
 
   if (auth.api_token) {
-        localStorage.setItem('api_token', auth.api_token);
-    }
-    
-    console.log("Token from Props:", auth.api_token);
-    console.log("Token in Storage:", localStorage.getItem('api_token'));
+    localStorage.setItem('api_token', auth.api_token);
+  }
+
+
+  useEffect(() => {
+    const channel = echo.private('customerdata-update')
+      .listen('.CustomerDataSynced', (e: any) => { // Try adding the dot here
+        setReloadKey(prev => prev + 1);
+      });
+
+
+    return () => echo.leave('customerdata-update');
+  }, []);
+
 
   return (
     <AuthenticatedLayout
@@ -48,7 +55,7 @@ export default function AccountPage() {
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
               <CheckoutProvider endpoint={checkoutEndpoint} checkout={checkoutData}>
-                <CustomerPortal endpoint={portalEndpoint} />
+                <CustomerPortal key={reloadKey} endpoint={portalEndpoint} />
               </CheckoutProvider>
             </div>
           </div>

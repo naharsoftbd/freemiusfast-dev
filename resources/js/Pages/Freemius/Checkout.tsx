@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { freemius } from '@/lib/freemius';
 import { CheckoutProvider } from '@/components/freemius/checkout-provider';
-import type { PurchaseData, CheckoutSerialized } from '@freemius/sdk';
+import type { CheckoutSerialized } from '@freemius/sdk';
 import SomeComponent from '@/components/freemius/SomeComponent';
 
 const checkoutEndpoint = import.meta.env.VITE_FREEMIUS_PUBLIC_URL + '/api/checkout';
@@ -25,11 +25,11 @@ export default function Checkout() {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Account
+                    Checkout
                 </h2>
             }
         >
-            <Head title="Account" />
+            <Head title="Checkout" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">

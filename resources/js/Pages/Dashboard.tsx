@@ -1,8 +1,13 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { freemius } from '@/lib/freemius';
+import { usePage } from '@inertiajs/react';
 
 export default function Dashboard() {
+    const { auth } = usePage().props;
+    if (auth.api_token) {
+        localStorage.setItem('api_token', auth.api_token);
+    }
     async function main() {
   const pricing = await freemius.pricing.retrieve();
   const purchasesByEmail = await freemius.purchase.retrievePurchasesByEmail('abusalah01diu@gmail.com');

@@ -12,14 +12,14 @@ class FreemiusLicense extends Model
         'is_block_features', 'is_cancelled', 'is_whitelabeled', 'environment', 'source',
         'expiration', 'freemius_created_at', 'freemius_updated_at',
     ];
-    
+
     protected $casts = [
-            'products' => 'array',
-            'is_free_localhost' => 'boolean',
-            'is_block_features' => 'boolean',
-            'is_cancelled' => 'boolean',
-            'is_whitelabeled' => 'boolean',
-            'expiration' => 'datetime',
-            'secret_key' => 'encrypted',
-        ];
+        'products' => 'array',
+        'is_free_localhost' => 'boolean',
+        'is_block_features' => 'boolean',
+        'is_cancelled' => 'boolean',
+        'is_whitelabeled' => 'boolean',
+        'expiration' => 'datetime',
+        'secret_key' => 'encrypted',
+    ];
 }

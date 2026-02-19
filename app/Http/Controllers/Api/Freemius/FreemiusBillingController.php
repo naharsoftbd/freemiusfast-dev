@@ -30,7 +30,7 @@ class FreemiusBillingController extends Controller
 
     public function updateByFsUserId(Request $request, $fs_user_id)
     {
-        if ((string) $fs_user_id !== (string) (auth()->user()->subscription->fs_user_id ?? null)) {
+        if ((string) $fs_user_id !== (string) (auth()->user()->entitlement->fs_user_id ?? null)) {
             abort(403, 'Unauthorized: You do not own this billing record.');
         }
 
