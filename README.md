@@ -20,6 +20,11 @@
 * **Advanced RBAC:** Robust Role-Based Access Control to restrict features based on license tiers (Free vs. Pro).
 * **Responsive UI:** Beautiful dashboard built with Tailwind CSS and Lucide icons.
 
+### Freemius Setting
+<p align="center">
+  <img src="/public/screenshot/admin_freemius_settings.jpg" width="800" alt="Freemius Setting" />
+</p>
+
 ### Inactive Plan Account
 <p align="center">
   <img src="/public/screenshot/inactive_plan.png" width="800" alt="Inactive Plan Screenshot" />
@@ -30,10 +35,6 @@
   <img src="/public/screenshot/active_plan_account.png" width="800" alt="Active Plan Screenshot" />
 </p>
 
-### Freemius Setting
-<p align="center">
-  <img src="/public/screenshot/admin_freemius_settings.jpg" width="800" alt="Freemius Setting" />
-</p>
 
 
 ---
