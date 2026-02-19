@@ -75,6 +75,13 @@ Add your Freemius developer credentials to your dashobard to enable licensing fe
   <img src="/public/screenshot/admin_freemius_settings.jpg" width="800" alt="Freemius Setting" />
 </p>
 
+### 5. Run necessary command 
+These commands very important for application
+
+```bash
+php artisan queue:work
+php artisan reverb:start --host=127.0.0.1 --port=8080
+```
 
 ## 🔑 Licensing Architecture
 Freemiusfast utilizes a middleware-based approach to verify Freemiusfast licenses. This ensures that premium React components and Laravel routes are only accessible to authorized users.
