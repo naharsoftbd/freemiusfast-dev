@@ -35,8 +35,8 @@ trait FreemiusConfigTrait
     protected function getFsUserId(): ?string
     {
         $user = auth()->user();
-        
-        if (!$user) {
+
+        if (! $user) {
             return null;
         }
 
@@ -45,7 +45,7 @@ trait FreemiusConfigTrait
         return $subscription ? $subscription->fs_user_id : null;
 
         // Removed for Hosted Checkout
-        //return $user?->subscription?->fs_user_id ?? null;
+        // return $user?->subscription?->fs_user_id ?? null;
     }
 
     protected function client()
@@ -56,9 +56,9 @@ trait FreemiusConfigTrait
     }
 
     protected function getBaseUrl()
-    {   
+    {
         $baseUrl = "{$this->apiBaseUrl}/{$this->productId}";
-        
+
         return $baseUrl;
     }
 }

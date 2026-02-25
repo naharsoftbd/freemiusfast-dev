@@ -22,8 +22,8 @@ class FreemiusSubscriptionController extends Controller
     public function cancelSubscription(Request $request, $subscriptionId)
     {
         $validated = $request->validate([
-            'reason' => 'nullable|string',
-            'reason_ids' => 'nullable|array',
+            'reason'       => 'nullable|string',
+            'reason_ids'   => 'nullable|array',
             'reason_ids.*' => 'integer',
         ]);
 

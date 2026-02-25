@@ -11,10 +11,10 @@ class ApiResponseService
     {
         return response()->json([
             'success' => true,
-            'code' => $code,
+            'code'    => $code,
             'message' => $message,
-            'data' => $data,
-            'errors' => [],
+            'data'    => $data,
+            'errors'  => [],
         ], $code);
     }
 
@@ -22,10 +22,10 @@ class ApiResponseService
     {
         return response()->json([
             'success' => false,
-            'code' => $code,
+            'code'    => $code,
             'message' => $message,
-            'data' => null,
-            'errors' => $errors,
+            'data'    => null,
+            'errors'  => $errors,
         ], $code);
     }
 }

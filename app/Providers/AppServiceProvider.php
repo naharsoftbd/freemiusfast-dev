@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Freemius\FreemiusSetting;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
-use App\Models\Freemius\FreemiusSetting;
 use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,12 +32,12 @@ class AppServiceProvider extends ServiceProvider
                     $settings = FreemiusSetting::first();
 
                     return [
-                        'product_id' => $settings->freemius_product_id ?? null,
-                        'public_key' => $settings->public_key ?? null,
-                        'secret_key' => $settings->secret_key ?? null,
+                        'product_id'   => $settings->freemius_product_id ?? null,
+                        'public_key'   => $settings->public_key ?? null,
+                        'secret_key'   => $settings->secret_key ?? null,
                         'bearer_token' => $settings->api_token ?? null,
-                        'base_url' => $settings->base_url ?? null,
-                        'public_url' => $settings->public_url ?? null,
+                        'base_url'     => $settings->base_url ?? null,
+                        'public_url'   => $settings->public_url ?? null,
                         'api_base_url' => $settings->api_base_url ?? null,
                     ];
                 });

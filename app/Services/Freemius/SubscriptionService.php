@@ -2,8 +2,8 @@
 
 namespace App\Services\Freemius;
 
-use App\Traits\FreemiusConfigTrait;
 use App\Jobs\Freemius\SyncFreemiusCustomerData;
+use App\Traits\FreemiusConfigTrait;
 
 class SubscriptionService
 {
@@ -24,11 +24,12 @@ class SubscriptionService
             ->delete(
                 "{$this->baseUrl}/subscriptions/{$subscriptionId}.json",
                 [
-                    'reason' => $reason,
+                    'reason'     => $reason,
                     'reason_ids' => $reasonIds,
                 ]
             );
         SyncFreemiusCustomerData::dispatch(auth()->user());
+
         return $response->json();
     }
 }

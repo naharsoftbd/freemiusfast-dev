@@ -4,9 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\File;
 
 class CreateAdminUser extends Command
 {
@@ -38,12 +38,12 @@ class CreateAdminUser extends Command
         $password = (string) ($this->option('password') ?: $this->secret('Admin password'));
 
         $validator = Validator::make([
-            'name' => $name,
-            'email' => $email,
+            'name'     => $name,
+            'email'    => $email,
             'password' => $password,
         ], [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ]);
 
@@ -69,14 +69,14 @@ class CreateAdminUser extends Command
         $user = User::updateOrCreate(
             ['email' => $email],
             [
-                'name' => $name,
+                'name'     => $name,
                 'password' => $password,
-                'status' => true,
+                'status'   => true,
             ]
         );
 
         $adminRole = Role::firstOrCreate([
-            'name' => 'Admin',
+            'name'       => 'Admin',
             'guard_name' => 'web',
         ]);
 
@@ -89,7 +89,7 @@ class CreateAdminUser extends Command
         $this->line("Email: {$user->email}");
 
         File::put(storage_path('installed'), now()->toDateTimeString());
-        
+
         return self::SUCCESS;
     }
 }

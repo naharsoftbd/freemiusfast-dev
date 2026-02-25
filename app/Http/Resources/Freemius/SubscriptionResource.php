@@ -17,9 +17,9 @@ class SubscriptionResource extends JsonResource
     {
         return [
             'subscriptionId' => (string) $this->subscription_id,
-            'licenseId' => (string) $this->license_id,
-            'planId' => (string) $this->plan_id,
-            'pricingId' => (string) $this->pricing_id,
+            'licenseId'      => (string) $this->license_id,
+            'planId'         => (string) $this->plan_id,
+            'pricingId'      => (string) $this->pricing_id,
 
             'planTitle' => $this->plan_title ?? 'Unknown Plan',
 
@@ -60,11 +60,9 @@ class SubscriptionResource extends JsonResource
 
             'isFreeTrial' => $this->is_free_trial,
 
-            'applyRenewalCancellationCouponUrl' =>
-                $this->apply_renewal_cancellation_coupon_url,
+            'applyRenewalCancellationCouponUrl' => $this->apply_renewal_cancellation_coupon_url,
 
-            'cancelRenewalUrl' =>
-                url("/subscriptions/{$this->subscription_id}/cancel"),
+            'cancelRenewalUrl' => url("/subscriptions/{$this->subscription_id}/cancel"),
 
             'sandboxParam' => app(\App\Services\Freemius\FreemiusService::class)
                 ->getSandBoxParam() ?? [],

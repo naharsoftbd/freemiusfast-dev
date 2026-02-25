@@ -17,7 +17,7 @@ class PermissionSeeder extends Seeder
             'View',
             'Create',
             'Edit',
-            'Delete'
+            'Delete',
         ];
 
         foreach ($permissions as $key => $permission) {

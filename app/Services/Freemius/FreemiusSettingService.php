@@ -41,28 +41,28 @@ class FreemiusSettingService
                 'freemius_product_id' => $data['freemius_product_id'],
             ],
             [
-                'developer_id' => $data['developer_id'],
-                'developer_public_key' => $data['developer_public_key'],
-                'developer_secret_key' => $data['developer_secret_key'],
-                'api_token' => $data['api_token'],
-                'title' => $data['title'],
-                'slug' => $data['slug'] ?? null,
-                'type' => $data['type'] ?? null,
-                'icon' => $data['icon'] ?? null,
-                'money_back_period' => $data['money_back_period'] ?? null,
-                'refund_policy' => $data['refund_policy'] ?? null,
-                'annual_renewals_discount' => $data['annual_renewals_discount'] ?? null,
-                'renewals_discount_type' => $data['renewals_discount_type'] ?? null,
-                'lifetime_license_proration_days' => $data['lifetime_license_proration_days'] ?? null,
-                'is_pricing_visible' => $data['is_pricing_visible'],
-                'accepted_payments' => $data['accepted_payments'],
-                'expose_license_key' => $data['expose_license_key'],
+                'developer_id'                           => $data['developer_id'],
+                'developer_public_key'                   => $data['developer_public_key'],
+                'developer_secret_key'                   => $data['developer_secret_key'],
+                'api_token'                              => $data['api_token'],
+                'title'                                  => $data['title'],
+                'slug'                                   => $data['slug'] ?? null,
+                'type'                                   => $data['type'] ?? null,
+                'icon'                                   => $data['icon'] ?? null,
+                'money_back_period'                      => $data['money_back_period'] ?? null,
+                'refund_policy'                          => $data['refund_policy'] ?? null,
+                'annual_renewals_discount'               => $data['annual_renewals_discount'] ?? null,
+                'renewals_discount_type'                 => $data['renewals_discount_type'] ?? null,
+                'lifetime_license_proration_days'        => $data['lifetime_license_proration_days'] ?? null,
+                'is_pricing_visible'                     => $data['is_pricing_visible'],
+                'accepted_payments'                      => $data['accepted_payments'],
+                'expose_license_key'                     => $data['expose_license_key'],
                 'enable_after_purchase_email_login_link' => $data['enable_after_purchase_email_login_link'],
-                'freemius_payload' => $data['freemius_payload'] ?? null,
+                'freemius_payload'                       => $data['freemius_payload'] ?? null,
                 // 'is_synced' => false,
-                'user_id' => $data['user_id'],
-                'public_url' => $data['public_url'], // Your Business Url
-                'base_url' => $data['base_url'], // Freemius Base Url
+                'user_id'      => $data['user_id'],
+                'public_url'   => $data['public_url'], // Your Business Url
+                'base_url'     => $data['base_url'], // Freemius Base Url
                 'api_base_url' => $data['api_base_url'], // Freemius API Base Url
             ]);
         // Dispatch Job
@@ -99,22 +99,22 @@ class FreemiusSettingService
         FreemiusSetting::updateOrCreate(
             ['freemius_product_id' => $data['id']], // Unique identifier
             [
-                'title' => $data['title'],
-                'slug' => $data['slug'],
-                'icon' => $data['icon'],
-                'secret_key' => $data['secret_key'],
-                'public_key' => $data['public_key'],
-                'type' => $data['type'],
-                'money_back_period' => $data['money_back_period'],
-                'refund_policy' => $data['refund_policy'] ?? 'strict',
-                'annual_renewals_discount' => $data['annual_renewals_discount'] ?? 0,
-                'renewals_discount_type' => $data['renewals_discount_type'],
+                'title'                           => $data['title'],
+                'slug'                            => $data['slug'],
+                'icon'                            => $data['icon'],
+                'secret_key'                      => $data['secret_key'],
+                'public_key'                      => $data['public_key'],
+                'type'                            => $data['type'],
+                'money_back_period'               => $data['money_back_period'],
+                'refund_policy'                   => $data['refund_policy'] ?? 'strict',
+                'annual_renewals_discount'        => $data['annual_renewals_discount'] ?? 0,
+                'renewals_discount_type'          => $data['renewals_discount_type'],
                 'lifetime_license_proration_days' => $data['lifetime_license_proration_days'],
-                'is_pricing_visible' => $data['is_pricing_visible'],
-                'accepted_payments' => $data['accepted_payments'],
+                'is_pricing_visible'              => $data['is_pricing_visible'],
+                'accepted_payments'               => $data['accepted_payments'],
                 // Map other fields here...
                 'freemius_payload' => $data,
-                'is_synced' => true,
+                'is_synced'        => true,
             ]
         );
 
@@ -126,27 +126,27 @@ class FreemiusSettingService
             FreemiusPlan::updateOrCreate(
                 ['plan_id' => $plan['id']],
                 [
-                    'plugin_id' => $plan['plugin_id'],
-                    'name' => $plan['name'],
-                    'title' => $plan['title'],
-                    'description' => $plan['description'],
-                    'is_free_localhost' => $plan['is_free_localhost'],
-                    'is_block_features' => $plan['is_block_features'],
+                    'plugin_id'                 => $plan['plugin_id'],
+                    'name'                      => $plan['name'],
+                    'title'                     => $plan['title'],
+                    'description'               => $plan['description'],
+                    'is_free_localhost'         => $plan['is_free_localhost'],
+                    'is_block_features'         => $plan['is_block_features'],
                     'is_block_features_monthly' => $plan['is_block_features_monthly'],
-                    'license_type' => $plan['license_type'],
-                    'is_https_support' => $plan['is_https_support'],
-                    'trial_period' => $plan['trial_period'],
-                    'is_require_subscription' => $plan['is_require_subscription'],
-                    'support_kb' => $plan['support_kb'],
-                    'support_forum' => $plan['support_forum'],
-                    'support_email' => $plan['support_email'],
-                    'support_phone' => $plan['support_phone'],
-                    'support_skype' => $plan['support_skype'],
-                    'is_success_manager' => $plan['is_success_manager'],
-                    'is_featured' => $plan['is_featured'],
-                    'is_hidden' => $plan['is_hidden'],
-                    'freemius_created_at' => $plan['created'],
-                    'freemius_updated_at' => $plan['updated'],
+                    'license_type'              => $plan['license_type'],
+                    'is_https_support'          => $plan['is_https_support'],
+                    'trial_period'              => $plan['trial_period'],
+                    'is_require_subscription'   => $plan['is_require_subscription'],
+                    'support_kb'                => $plan['support_kb'],
+                    'support_forum'             => $plan['support_forum'],
+                    'support_email'             => $plan['support_email'],
+                    'support_phone'             => $plan['support_phone'],
+                    'support_skype'             => $plan['support_skype'],
+                    'is_success_manager'        => $plan['is_success_manager'],
+                    'is_featured'               => $plan['is_featured'],
+                    'is_hidden'                 => $plan['is_hidden'],
+                    'freemius_created_at'       => $plan['created'],
+                    'freemius_updated_at'       => $plan['updated'],
                 ]
             );
 
@@ -166,14 +166,14 @@ class FreemiusSettingService
                 FreemiusPricing::updateOrCreate(
                     ['pricing_id' => $pricing['id']],
                     [
-                        'plan_id' => $pricing['plan_id'],
-                        'licenses' => $pricing['licenses'],
-                        'monthly_price' => $pricing['monthly_price'],
-                        'annual_price' => $pricing['annual_price'],
-                        'lifetime_price' => $pricing['lifetime_price'],
-                        'currency' => $pricing['currency'],
-                        'is_whitelabeled' => $pricing['is_whitelabeled'],
-                        'is_hidden' => $pricing['is_hidden'],
+                        'plan_id'             => $pricing['plan_id'],
+                        'licenses'            => $pricing['licenses'],
+                        'monthly_price'       => $pricing['monthly_price'],
+                        'annual_price'        => $pricing['annual_price'],
+                        'lifetime_price'      => $pricing['lifetime_price'],
+                        'currency'            => $pricing['currency'],
+                        'is_whitelabeled'     => $pricing['is_whitelabeled'],
+                        'is_hidden'           => $pricing['is_hidden'],
                         'freemius_created_at' => $pricing['created'],
                         'freemius_updated_at' => $pricing['updated'],
                     ]
@@ -187,12 +187,12 @@ class FreemiusSettingService
 
             $plan['features'] = collect($features)->map(function ($feature) {
                 return [
-                    'id' => $feature['id'],
-                    'plan_id' => $feature['plan_id'],
-                    'title' => $feature['title'],
+                    'id'          => $feature['id'],
+                    'plan_id'     => $feature['plan_id'],
+                    'title'       => $feature['title'],
                     'description' => $feature['description'],
                     'is_featured' => $feature['is_featured'],
-                    'value' => $feature['value'],
+                    'value'       => $feature['value'],
                 ];
             })->values()->all();
 
@@ -215,9 +215,9 @@ class FreemiusSettingService
 
                 $planModel->features()->syncWithoutDetaching([
                     $featureModel->id => [
-                        'value' => $feature['value'],
+                        'value'       => $feature['value'],
                         'is_featured' => $feature['is_featured'],
-                    ]
+                    ],
                 ]);
             }
 
@@ -229,17 +229,17 @@ class FreemiusSettingService
     private function transformProduct(FreemiusSetting $product): array
     {
         return [
-            'title' => $product->title,
-            'slug' => $product->slug,
-            'type' => $product->type,
-            'money_back_period' => $product->money_back_period,
-            'refund_policy' => $product->refund_policy,
-            'annual_renewals_discount' => $product->annual_renewals_discount,
-            'renewals_discount_type' => $product->renewals_discount_type,
-            'lifetime_license_proration_days' => $product->lifetime_license_proration_days,
-            'is_pricing_visible' => $product->is_pricing_visible,
-            'accepted_payments' => $product->accepted_payments,
-            'expose_license_key' => $product->expose_license_key,
+            'title'                                  => $product->title,
+            'slug'                                   => $product->slug,
+            'type'                                   => $product->type,
+            'money_back_period'                      => $product->money_back_period,
+            'refund_policy'                          => $product->refund_policy,
+            'annual_renewals_discount'               => $product->annual_renewals_discount,
+            'renewals_discount_type'                 => $product->renewals_discount_type,
+            'lifetime_license_proration_days'        => $product->lifetime_license_proration_days,
+            'is_pricing_visible'                     => $product->is_pricing_visible,
+            'accepted_payments'                      => $product->accepted_payments,
+            'expose_license_key'                     => $product->expose_license_key,
             'enable_after_purchase_email_login_link' => $product->enable_after_purchase_email_login_link,
         ];
     }

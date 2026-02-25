@@ -2,17 +2,15 @@
 
 namespace App\Services\Freemius;
 
+use App\Http\Resources\Freemius\FreemiusPaymentResource;
+use App\Http\Resources\Freemius\SubscriptionResource;
+use App\Http\Resources\PlanResource;
+use App\Models\Freemius\FreemiusPayment;
 use App\Models\Freemius\FreemiusPlan;
+use App\Models\Freemius\Subscription;
 use App\Models\User;
 use App\Traits\FreemiusConfigTrait;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use App\Http\Resources\PlanResource;
-use App\Models\Freemius\Subscription;
-use App\Http\Resources\Freemius\SubscriptionResource;
-use Illuminate\Support\Facades\Log;
-use App\Http\Resources\Freemius\FreemiusPaymentResource;
-use App\Models\Freemius\FreemiusPayment;
 
 class FreemiusService
 {
@@ -64,12 +62,12 @@ class FreemiusService
     {
         $sandboxParam = $this->getSandBoxParam() ?? [];
 
-         $plans = FreemiusPlan::with('pricings', 'features')->where('plugin_id', $this->productId)->get()
-                    ->each(function ($plan) use ($sandboxParam) {
-                        $plan->sandboxParam = $sandboxParam;
-                    });
-         
-         return $plans;
+        $plans = FreemiusPlan::with('pricings', 'features')->where('plugin_id', $this->productId)->get()
+            ->each(function ($plan) use ($sandboxParam) {
+                $plan->sandboxParam = $sandboxParam;
+            });
+
+        return $plans;
     }
 
     // Customer Portal API Indpoint Data
@@ -80,25 +78,25 @@ class FreemiusService
         $user->load(['subscriptions.plan']);
 
         $plans = PlanResource::collection($this->getPlanData());
-        
+
         // 1. Safety check
         if (! $this->getFsUserId()) {
             return response()->json([
-                'user' => $user,
+                'user'          => $user,
                 'subscriptions' => [
                     // React component looks for 'primary' to show the main card
                     'primary' => [],
-                    'all' => [],
+                    'all'     => [],
                 ],
-                'plans' => $plans,
-                'payments' => [],
+                'plans'       => $plans,
+                'payments'    => [],
                 'sellingUnit' => 'site', // or 'user'/'license'
             ]);
         }
         $payments = $this->getPaymentData($plans);
         // 2. Fetch Data in Parallel (or sequence)
         $userResponse = $this->client()->get("{$this->baseUrl}/users/{$this->getFsUserId()}.json");
-        
+
         $subscriptions = $user->subscriptions->sortByDesc('freemius_created_at');
         $primary = $subscriptions->first(); // or however you define primary
         $active = $subscriptions->whereNull('cancelled_at');
@@ -108,18 +106,18 @@ class FreemiusService
 
         // 3. Construct the "PortalData" object
         return response()->json([
-            'user' => $userResponse->json(),
+            'user'          => $userResponse->json(),
             'subscriptions' => [
                 // React component looks for 'primary' to show the main card
                 'primary' => $primary
                 ? new SubscriptionResource($primary)
                 : null,
                 'active' => SubscriptionResource::collection($active),
-                'past' => SubscriptionResource::collection($past),
+                'past'   => SubscriptionResource::collection($past),
             ],
-            'plans' => $plans,
-            'payments' => $payments,
-            'billing' => $billing,
+            'plans'       => $plans,
+            'payments'    => $payments,
+            'billing'     => $billing,
             'sellingUnit' => 'site', // or 'user'/'license'
         ]);
     }
@@ -128,7 +126,7 @@ class FreemiusService
     public function getPaymentData($plans)
     {
         $payments = FreemiusPayment::where('fs_user_id', $this->getFsUserId())->where('plugin_id', $this->productId)
-                    ->with('product')->get();
+            ->with('product')->get();
 
         return FreemiusPaymentResource::collection($payments);
     }
@@ -138,13 +136,13 @@ class FreemiusService
     {
         $plan = collect($plans)->firstWhere('plan_id', (int) $sub['plan_id']);
         $pricing = $plan->pricings->where('pricing_id', (int) $sub['pricing_id'])->first();
-        
+
         return [
             ...$sub,
             'subscriptionId' => (string) $sub['id'],
-            'licenseId' => (string) $sub['license_id'],
-            'planId' => (string) $sub['plan_id'],
-            'pricingId' => (string) $sub['pricing_id'],
+            'licenseId'      => (string) $sub['license_id'],
+            'planId'         => (string) $sub['plan_id'],
+            'pricingId'      => (string) $sub['pricing_id'],
 
             'planTitle' => $plan['title'] ?? 'Unknown Plan',
 
@@ -176,7 +174,7 @@ class FreemiusService
                     'type' => match ($sub['gateway']) {
                         'stripe' => 'card',
                         'paypal' => 'paypal',
-                        default => 'unknown',
+                        default  => 'unknown',
                     },
                 ]
                 : null,
@@ -203,9 +201,9 @@ class FreemiusService
     protected function mapBillingCycle(?int $cycle): string
     {
         return match ($cycle) {
-            1 => 'monthly',
-            12 => 'yearly',
-            0 => 'oneoff',
+            1       => 'monthly',
+            12      => 'yearly',
+            0       => 'oneoff',
             default => 'N/A',
         };
     }
@@ -216,20 +214,20 @@ class FreemiusService
         $billing = $this->freemiusBillingService->getUserBilling($this->getFsUserId());
 
         $billing = [
-            'business_name' => $rawBilling['business_name'] ?? null,
-            'email' => $rawBilling['email'] ?? null,
-            'first' => $rawBilling['first'] ?? 'Abu',
-            'last' => $rawBilling['last'] ?? 'Salah',
-            'phone' => $rawBilling['phone'] ?? null,
-            'tax_id' => $rawBilling['tax_id'] ?? null,
-            'address_street' => $rawBilling['address_street'] ?? null,
-            'address_apt' => $rawBilling['address_apt'] ?? null,
-            'address_city' => $rawBilling['address_city'] ?? null,
-            'address_state' => $rawBilling['address_state'] ?? null,
-            'address_zip' => $rawBilling['address_zip'] ?? null,
-            'address_country' => $rawBilling['address_country'] ?? null,
+            'business_name'        => $rawBilling['business_name'] ?? null,
+            'email'                => $rawBilling['email'] ?? null,
+            'first'                => $rawBilling['first'] ?? 'Abu',
+            'last'                 => $rawBilling['last'] ?? 'Salah',
+            'phone'                => $rawBilling['phone'] ?? null,
+            'tax_id'               => $rawBilling['tax_id'] ?? null,
+            'address_street'       => $rawBilling['address_street'] ?? null,
+            'address_apt'          => $rawBilling['address_apt'] ?? null,
+            'address_city'         => $rawBilling['address_city'] ?? null,
+            'address_state'        => $rawBilling['address_state'] ?? null,
+            'address_zip'          => $rawBilling['address_zip'] ?? null,
+            'address_country'      => $rawBilling['address_country'] ?? null,
             'address_country_code' => $rawBilling['address_country_code'] ?? null,
-            'fs_user_id' => $this->getFsUserId(),
+            'fs_user_id'           => $this->getFsUserId(),
         ];
 
         return $billing;
@@ -272,7 +270,7 @@ class FreemiusService
 
         return [
             'token' => $sandbox_token,
-            'ctx' => $ctx,
+            'ctx'   => $ctx,
         ];
     }
 }

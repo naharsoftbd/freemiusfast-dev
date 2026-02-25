@@ -6,7 +6,6 @@ use App\Models\Freemius\FreemiusLicense;
 use App\Models\Freemius\UserFsEntitlement;
 use App\Models\User;
 use App\Traits\FreemiusConfigTrait;
-use Illuminate\Support\Facades\Log;
 
 class FreemiusLicenseService
 {
@@ -52,22 +51,22 @@ class FreemiusLicenseService
                     'freemius_id' => $license['id'], // unique key
                 ],
                 [
-                    'user_id' => $userId,
-                    'fs_user_id' => $license['user_id'],
-                    'product_id' => $license['plugin_id'],
-                    'plan_id' => $license['plan_id'],
-                    'pricing_id' => $license['pricing_id'],
-                    'quota' => $license['quota'],
-                    'activated' => $license['activated'],
-                    'activated_local' => $license['activated_local'],
-                    'secret_key' => $license['secret_key'],
-                    'is_free_localhost' => $license['is_free_localhost'],
-                    'is_block_features' => $license['is_block_features'],
-                    'is_cancelled' => $license['is_cancelled'],
-                    'is_whitelabeled' => $license['is_whitelabeled'],
-                    'environment' => $license['environment'],
-                    'source' => $license['source'],
-                    'expiration' => $license['expiration'],
+                    'user_id'             => $userId,
+                    'fs_user_id'          => $license['user_id'],
+                    'product_id'          => $license['plugin_id'],
+                    'plan_id'             => $license['plan_id'],
+                    'pricing_id'          => $license['pricing_id'],
+                    'quota'               => $license['quota'],
+                    'activated'           => $license['activated'],
+                    'activated_local'     => $license['activated_local'],
+                    'secret_key'          => $license['secret_key'],
+                    'is_free_localhost'   => $license['is_free_localhost'],
+                    'is_block_features'   => $license['is_block_features'],
+                    'is_cancelled'        => $license['is_cancelled'],
+                    'is_whitelabeled'     => $license['is_whitelabeled'],
+                    'environment'         => $license['environment'],
+                    'source'              => $license['source'],
+                    'expiration'          => $license['expiration'],
                     'freemius_created_at' => $license['created'],
                     'freemius_updated_at' => $license['updated'],
                 ]

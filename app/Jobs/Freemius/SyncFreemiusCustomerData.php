@@ -2,13 +2,13 @@
 
 namespace App\Jobs\Freemius;
 
+use App\Events\CustomerDataSynced;
 use App\Services\Freemius\FreemiusCustomerService;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Events\CustomerDataSynced;
 
 class SyncFreemiusCustomerData implements ShouldQueue
 {

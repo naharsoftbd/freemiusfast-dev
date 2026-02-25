@@ -48,7 +48,7 @@ class CheckoutController extends Controller
         $response = $api->Api('/plugins.json');
         $first_plugin_id = $response->plugins[0]->id;
         $first_plugin = $api->Api("/plugins/{$first_plugin_id}.json", 'PUT', [
-            'title' => 'Demo Product',
+            'title'             => 'Demo Product',
             'accepted_payments' => 0,
         ]);
         $resutls = $api->Api("/plugins/{$first_plugin_id}/payments.json");

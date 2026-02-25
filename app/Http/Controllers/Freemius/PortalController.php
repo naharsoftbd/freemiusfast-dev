@@ -29,7 +29,7 @@ class PortalController extends Controller
         }
 
         return response($response->body(), 200, [
-            'Content-Type' => 'application/pdf',
+            'Content-Type'        => 'application/pdf',
             'Content-Disposition' => 'inline; filename="invoice-'.$paymentId.'.pdf"',
         ]);
     }

@@ -12,7 +12,7 @@ class LicenseApiController extends Controller
     {
         $request->validate([
             'license_key' => 'required',
-            'domain' => 'required',
+            'domain'      => 'required',
         ]);
 
         $license = License::all()->firstWhere(
@@ -36,7 +36,7 @@ class LicenseApiController extends Controller
         }
 
         return response()->json([
-            'status' => 'valid',
+            'status'     => 'valid',
             'expires_at' => $license->expires_at,
         ]);
     }

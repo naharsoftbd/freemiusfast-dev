@@ -4,20 +4,20 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Freemius\FreemiusBilling;
-use App\Models\Freemius\UserFsEntitlement;
 use App\Models\Freemius\FreemiusPayment;
 use App\Models\Freemius\Subscription;
+use App\Models\Freemius\UserFsEntitlement;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -51,7 +51,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
@@ -72,10 +72,9 @@ class User extends Authenticatable
         /**
          * Automatically set the `name` when first_name or last_name changes
          */
-
         static::saving(function ($user) {
             if ($user->first_name || $user->last_name) {
-                $user->name = trim($user->first_name . ' ' . $user->last_name);
+                $user->name = trim($user->first_name.' '.$user->last_name);
             }
         });
     }

@@ -18,7 +18,7 @@ return new class extends Migration
             // Feature Info
             $table->string('title');
             $table->text('description')->nullable();
-            
+
             $table->timestamps();
         });
     }
