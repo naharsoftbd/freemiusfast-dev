@@ -67,6 +67,20 @@ cp .env.example .env
 php artisan key:generate
 php artisan migrate:fresh --seed
 php artisan user:create-admin
+
+BROADCAST_CONNECTION=reverb
+
+REVERB_APP_ID=34343
+REVERB_APP_KEY=xxxxxxxxxxxxxxx
+REVERB_APP_SECRET=xxxxxxxxxxxx
+REVERB_HOST="127.0.0.1"
+REVERB_PORT=8080
+REVERB_SCHEME=http
+
+VITE_REVERB_APP_KEY="${REVERB_APP_KEY}"
+VITE_REVERB_HOST="${REVERB_HOST}"
+VITE_REVERB_PORT="${REVERB_PORT}"
+VITE_REVERB_SCHEME="${REVERB_SCHEME}"
 ```
 
 ### 4. Freemius Configuration

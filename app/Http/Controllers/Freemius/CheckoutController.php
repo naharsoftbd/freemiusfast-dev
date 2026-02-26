@@ -40,9 +40,9 @@ class CheckoutController extends Controller
 
     public function developer(Request $request)
     {
-        $devId = '27811';
-        $publicKey = 'pk_f6af2f65c61bd27a936fcb11b4103';
-        $secretKey = 'sk_6w1[0-(Ly8AHM]z>@UB:?Y(h<>2<C';
+        $devId = '12345';
+        $publicKey = 'pk_xxxxxxxxxxxxxx';
+        $secretKey = 'sk_xxxxxxxxxxxxxx';
 
         $api = new \Freemius_Api('developer', $devId, $publicKey, $secretKey);
         $response = $api->Api('/plugins.json');
