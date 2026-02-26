@@ -43,8 +43,8 @@
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/naharsoftbd/freemiusfast.git
-cd freemiusfast
+git clone https://github.com/naharsoftbd/freemiusfast-dev.git
+cd freemiusfast-dev
 ```
 
 ### 2. Install Dependencies
