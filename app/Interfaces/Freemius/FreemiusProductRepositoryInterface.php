@@ -2,7 +2,4 @@
 
 namespace App\Interfaces\Freemius;
 
-interface FreemiusProductRepositoryInterface
-{
-
-}
+interface FreemiusProductRepositoryInterface {}

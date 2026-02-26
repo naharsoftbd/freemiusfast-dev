@@ -10,7 +10,7 @@ class Subscription extends Model
     use HasFactory;
 
     protected $table = 'subscriptions';
-    
+
     protected $fillable = [
         'user_id',
         'plugin_id',
@@ -39,14 +39,14 @@ class Subscription extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'is_trial' => 'boolean',
-        'is_free_trial' => 'boolean',
-        'renewal_date' => 'datetime',
-        'cancelled_at' => 'datetime',
-        'trial_ends' => 'datetime',
+        'is_active'           => 'boolean',
+        'is_trial'            => 'boolean',
+        'is_free_trial'       => 'boolean',
+        'renewal_date'        => 'datetime',
+        'cancelled_at'        => 'datetime',
+        'trial_ends'          => 'datetime',
         'freemius_created_at' => 'datetime',
-        'payment_method' => 'array',
+        'payment_method'      => 'array',
     ];
 
     public function plan()

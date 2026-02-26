@@ -32,18 +32,18 @@ class FreemiusPlan extends Model
     ];
 
     protected $casts = [
-        'is_free_localhost' => 'boolean',
-        'is_block_features' => 'boolean',
+        'is_free_localhost'         => 'boolean',
+        'is_block_features'         => 'boolean',
         'is_block_features_monthly' => 'boolean',
-        'is_https_support' => 'boolean',
-        'is_require_subscription' => 'boolean',
-        'is_success_manager' => 'boolean',
-        'is_featured' => 'boolean',
-        'is_hidden' => 'boolean',
-        'license_type' => 'integer',
-        'trial_period' => 'integer',
-        'freemius_created_at' => 'datetime',
-        'freemius_updated_at' => 'datetime',
+        'is_https_support'          => 'boolean',
+        'is_require_subscription'   => 'boolean',
+        'is_success_manager'        => 'boolean',
+        'is_featured'               => 'boolean',
+        'is_hidden'                 => 'boolean',
+        'license_type'              => 'integer',
+        'trial_period'              => 'integer',
+        'freemius_created_at'       => 'datetime',
+        'freemius_updated_at'       => 'datetime',
     ];
 
     public function pricings()
@@ -54,11 +54,11 @@ class FreemiusPlan extends Model
     public function features()
     {
         return $this->belongsToMany(
-                FreemiusFeature::class,
-                'freemius_plan_feature',   // pivot table
-                'plan_id',                 // foreign key on pivot for this model
-                'feature_id'               // foreign key on pivot for related model
-                )->withPivot(['value', 'is_featured'])
-                ->withTimestamps();
+            FreemiusFeature::class,
+            'freemius_plan_feature',   // pivot table
+            'plan_id',                 // foreign key on pivot for this model
+            'feature_id'               // foreign key on pivot for related model
+        )->withPivot(['value', 'is_featured'])
+            ->withTimestamps();
     }
 }

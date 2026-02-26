@@ -18,15 +18,15 @@ class FreemiusSetting extends Model
     ];
 
     protected $casts = [
-        'refund_policy' => RefundPolicy::class,
-        'expose_license_key' => 'boolean',
+        'refund_policy'                          => RefundPolicy::class,
+        'expose_license_key'                     => 'boolean',
         'enable_after_purchase_email_login_link' => 'boolean',
-        'is_pricing_visible' => 'boolean',
-        'is_synced' => 'boolean',
-        'accepted_payments' => 'integer',
-        'annual_renewals_discount' => 'integer',
-        'money_back_period' => 'integer',
-        'lifetime_license_proration_days' => 'integer',
+        'is_pricing_visible'                     => 'boolean',
+        'is_synced'                              => 'boolean',
+        'accepted_payments'                      => 'integer',
+        'annual_renewals_discount'               => 'integer',
+        'money_back_period'                      => 'integer',
+        'lifetime_license_proration_days'        => 'integer',
     ];
 
     public function payment()

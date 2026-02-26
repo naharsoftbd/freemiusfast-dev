@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Freemius;
 
+use App\Events\ProductSynced;
 use App\Models\Freemius\FreemiusSetting;
 use App\Services\Freemius\FreemiusSettingService;
 use Illuminate\Bus\Queueable;
@@ -9,7 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Events\ProductSynced;
 
 class SyncFreemiusProductSetting implements ShouldQueue
 {

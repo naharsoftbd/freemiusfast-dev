@@ -13,11 +13,11 @@ class UserFsEntitlement extends Model
     ];
 
     protected $casts = [
-        'amount' => 'decimal:2',
-        'expiration' => 'datetime',
+        'amount'        => 'decimal:2',
+        'expiration'    => 'datetime',
         'billing_cycle' => 'integer',
-        'quota' => 'integer',
-        'tax' => 'integer',
+        'quota'         => 'integer',
+        'tax'           => 'integer',
     ];
 
     /**

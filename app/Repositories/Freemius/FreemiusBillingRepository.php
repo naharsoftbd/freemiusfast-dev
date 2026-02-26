@@ -4,15 +4,16 @@ namespace App\Repositories\Freemius;
 
 use App\Interfaces\Freemius\FreemiusBillingRepositoryInterface;
 use App\Models\Freemius\FreemiusBilling;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class FreemiusBillingRepository implements FreemiusBillingRepositoryInterface
 {
     public function getUserBilling($fs_user_id)
     {
-        $billing = FreemiusBilling::where('fs_user_id', $fs_user_id)->first();   
+        $billing = FreemiusBilling::where('fs_user_id', $fs_user_id)->first();
     }
+
     public function updateByFsUserId(array $data, $fs_user_id)
     {
         $user = Auth::user();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Jobs\Freemius\SyncFreemiusCustomerData;
 use App\Jobs\Freemius\SyncFreemiusLicenses;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Jobs\Freemius\SyncFreemiusCustomerData;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,7 +22,7 @@ class AuthenticatedSessionController extends Controller
     {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'status' => $request->session()->get('status'),
+            'status'           => $request->session()->get('status'),
         ]);
     }
 
@@ -46,6 +46,7 @@ class AuthenticatedSessionController extends Controller
 
         SyncFreemiusLicenses::dispatch($request->user());
         SyncFreemiusCustomerData::dispatch($request->user());
+
         // Force regular users to Portal Account with the token
         return redirect()->route('portal.account')->with('api_token', $token);
 

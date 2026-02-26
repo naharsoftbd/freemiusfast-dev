@@ -21,12 +21,12 @@ class FreemiusPricing extends Model
     ];
 
     protected $casts = [
-        'licenses' => 'integer',
-        'monthly_price' => 'decimal:2',
-        'annual_price' => 'decimal:2',
-        'lifetime_price' => 'decimal:2',
-        'is_whitelabeled' => 'boolean',
-        'is_hidden' => 'boolean',
+        'licenses'            => 'integer',
+        'monthly_price'       => 'decimal:2',
+        'annual_price'        => 'decimal:2',
+        'lifetime_price'      => 'decimal:2',
+        'is_whitelabeled'     => 'boolean',
+        'is_hidden'           => 'boolean',
         'freemius_created_at' => 'datetime',
         'freemius_updated_at' => 'datetime',
     ];

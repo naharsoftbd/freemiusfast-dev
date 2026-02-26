@@ -45,21 +45,21 @@ class FreemiusPaymentController extends Controller
 
         // 2️⃣ Validate input
         $validated = Validator::validate($request->all(), [
-            'user_id' => 'required|integer',
-            'action' => 'required|string',
-            'amount' => 'required|numeric',
-            'billing_cycle' => 'nullable|integer',
-            'currency' => 'required|string|size:3',
-            'email' => 'required|email',
-            'expiration' => 'nullable|date',
-            'license_id' => 'required|string',
-            'plan_id' => 'required|integer',
-            'pricing_id' => 'required|integer',
-            'quota' => 'required|integer',
+            'user_id'         => 'required|integer',
+            'action'          => 'required|string',
+            'amount'          => 'required|numeric',
+            'billing_cycle'   => 'nullable|integer',
+            'currency'        => 'required|string|size:3',
+            'email'           => 'required|email',
+            'expiration'      => 'nullable|date',
+            'license_id'      => 'required|string',
+            'plan_id'         => 'required|integer',
+            'pricing_id'      => 'required|integer',
+            'quota'           => 'required|integer',
             'subscription_id' => 'nullable|integer',
-            'payment_id' => 'nullable|integer',
-            'signature' => 'required|string',
-            'tax' => 'required|numeric',
+            'payment_id'      => 'nullable|integer',
+            'signature'       => 'required|string',
+            'tax'             => 'required|numeric',
         ]);
 
         // 3️⃣ Map Freemius user → local user

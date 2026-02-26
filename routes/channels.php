@@ -13,4 +13,3 @@ Broadcast::channel('product-updates', function ($user) {
 Broadcast::channel('customerdata-update', function ($user) {
     return true; // Or add logic: return $user->id === $product->user_id;
 });
-

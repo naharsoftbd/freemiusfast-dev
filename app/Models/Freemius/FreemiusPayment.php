@@ -41,13 +41,13 @@ class FreemiusPayment extends Model
     ];
 
     protected $casts = [
-        'gross' => 'decimal:2',
-        'gateway_fee' => 'decimal:2',
-        'vat' => 'decimal:2',
-        'is_renewal' => 'boolean',
-        'environment' => 'integer',
-        'source' => 'integer',
-        'quota' => 'integer',
+        'gross'               => 'decimal:2',
+        'gateway_fee'         => 'decimal:2',
+        'vat'                 => 'decimal:2',
+        'is_renewal'          => 'boolean',
+        'environment'         => 'integer',
+        'source'              => 'integer',
+        'quota'               => 'integer',
         'freemius_created_at' => 'datetime',
         'freemius_updated_at' => 'datetime',
     ];
